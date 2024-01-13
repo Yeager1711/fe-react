@@ -1,0 +1,58 @@
+.wrapper {
+    padding: 2rem 10%;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 99;
+    max-width: 100%;
+    border-bottom: .1rem solid #dbdbdb;
+
+    .logo {
+        font-size: 2rem;
+        font-weight: 550;
+        color: #fff;
+    }
+
+    .navbar {
+        a {
+             font-size: 1.5rem;
+             padding: .5rem .7rem;
+             margin-left: 2rem;
+             text-transform: none;
+ 
+             &:hover {
+                 background: #dbdbdb;
+                 color: #333;
+                 border-radius: 1rem;
+                 cursor: pointer;
+             }
+             
+             i {
+                 font-size: 2rem;
+             }
+         }
+
+         .account-menu {
+            position: absolute;
+            top: 90%;
+            right: 10%;
+            padding: .5rem 4rem;
+            background: #fff;
+            border-radius: 1rem;
+
+            .btn-controller {
+                color: #333;
+                text-align: center;
+                display: block;
+                margin: auto;
+                width: 100%;
+                
+                &:nth-child(1) {
+                    margin-bottom: .5rem;
+                }
+            }
+         }
+     }
+}
