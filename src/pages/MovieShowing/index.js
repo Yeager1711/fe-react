@@ -1,8 +1,6 @@
 
-
-
 function MovieShowing() {
-    return <h2> MovieShowing page</h2>
+    return 
 }
 
 export default MovieShowing;

@@ -5,6 +5,7 @@ import styles from './Header.Module.scss';
 //fontawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { redirect } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -18,13 +19,14 @@ function Header() {
     <header className={cx('wrapper')}>
       <a href="" className={cx('logo')}>
         {' '}
-        MOVIE CINEMA
+        Movies<span>Flix</span>
       </a>
 
       <nav className={cx('navbar')}>
         <a href="/">Trang chủ</a>
         <a href="/movieshowing">Phim đang chiếu</a>
         <a href="">Phim sắp chiếu</a>
+        <a href="">Tìm kiếm</a>
         <a onClick={toggleAccountMenu}>
           <FontAwesomeIcon icon={faUser} />
         </a>

@@ -3,6 +3,7 @@ import Register from '~/components/Layouts/Authen/Register'
 import Home from '~/pages/Home'
 import MovieShowing from '~/pages/MovieShowing'
 import Profile from '~/pages/Profile'
+import SetChair from '~/pages/SetChair'
 
 const publicRoutes = [
     {path: "/", component: Home},
@@ -12,6 +13,9 @@ const publicRoutes = [
     //authen
     {path: "/authen/login", component: Login},
     {path: "/authen/register", component: Register},
+
+    //setchair
+    {path: "/setchair", component: SetChair},
 ]
 
 const privateRoutes = [

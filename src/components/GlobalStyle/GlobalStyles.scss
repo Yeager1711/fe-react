@@ -81,3 +81,15 @@ a {
         color: #333;
     }
 }
+
+.button-correct {
+    border-radius: .5rem;
+    display: inline-block;
+    background: #bf2424;
+    color: #ffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: .5rem 3rem;
+    margin-right: .7rem;
+    text-shadow: 0 .5rem 1rem rgba(255,255,255,.3);
+}
