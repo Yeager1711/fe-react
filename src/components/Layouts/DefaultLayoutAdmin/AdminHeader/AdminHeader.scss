@@ -1,0 +1,113 @@
+.admin-header {
+    text-align: center;
+    background-image: linear-gradient(to top, rgba(0,0,0, .8), rgba(0,0,0, .1)), url(./images/bg-header1.jpg);
+    background-position: center bottom;
+    min-height: 100vh;
+    background-size: cover;
+    width: 100%;
+    object-fit: cover;
+    padding: 3rem 0;
+    border-radius: 2rem;
+    position: relative;
+
+
+    .container-user {
+        text-align: center;
+
+        .image-user {
+            width: 16rem;
+            height: 16rem;
+            padding: 1rem;
+            margin: auto;
+            overflow: hidden;
+            background-position: center;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            background: #fff; 
+
+            .scale {
+                object-fit: cover; 
+                position: absolute; 
+                top: 50%; 
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            img {
+                width: 100%; 
+                height: 100%;
+                object-fit: cover; 
+                transform: scale(2.5);
+            }
+        }
+
+        .info-container {
+            margin: 2rem auto;
+            background: #333;
+            color: #fff;
+            padding: 1rem 2rem;
+
+            .name,
+            .birthday,
+            .role {
+                display: block;
+                font-size: 1.6rem;
+                font-weight: 550;
+
+                &:nth-child(1) {
+                    text-transform: uppercase;
+                }
+
+                &:nth-child(2) {
+                    margin-top: 1rem;
+                    font-size: 1.4rem;
+                    text-transform: none;
+                }
+
+                &:nth-child(3) {
+                    margin-top: 1.2rem;
+                    font-size: 1.4rem;
+                    font-weight: 400;
+                    text-transform: none;
+                }
+            }
+        }
+    }
+
+    .navbar-admin {
+        background: #333;
+        margin: 0 4rem;
+        border-radius: .5rem;
+        
+        a {
+            display: block;
+            padding: 1.8rem;
+            font-size: 1.4rem;
+            margin: 2rem 0;
+            text-transform: none;
+
+            &:hover {
+                background: rgba(255,255,255, .8);
+                color: #333;
+            }
+        }
+    }
+
+    .logout {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translate(-50%);
+
+        .btn-logout {
+            padding: .7rem 3rem;
+            background: #fff;
+            border-radius: 1rem;
+
+            &:hover {
+                transform: scale(.98);
+            }
+        }
+    }
+}

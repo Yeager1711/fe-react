@@ -91,6 +91,25 @@
                 }
            }
 
+           .error-valid {
+            margin-top: 1rem;
+            color: #f12525;
+            font-size: 1.3rem;
+           }
+
+           .shake {
+            animation: shake 0.5s;
+          }
+          
+          @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+          }
+          
+
            .authen-connect {
                 margin-top: 3rem;
                 display: flex;

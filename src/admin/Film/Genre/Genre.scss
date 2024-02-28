@@ -1,0 +1,54 @@
+.add-genre {
+    .addGenre-container {
+        margin-top: 2rem;
+        background: #555;
+        padding: 1rem;
+        min-height: 80vh;
+        position: relative;
+
+        h3 {
+            margin-top: 1rem;
+            display: inline-block;
+            color: #fff;
+        }
+        .genre-input {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            margin: auto;
+            padding: .8rem 1.5rem;
+            border: .1rem solid #dbdbdb;
+            border-radius: 5rem;
+            width: 50rem;
+            max-width: 95%;
+
+            input {
+                position: relative;
+                width: 87%;
+                height: 100%;
+                overflow: hidden;
+                background: none;
+                color: #fff;
+                font-size: 16px;
+
+                &::placeholder {
+                    font-size: 1.4rem;
+                }
+            }
+
+            .btn-Addgenre {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                padding: 0 1.5rem;
+                border-top-right-radius: 5rem;
+                border-bottom-right-radius: 5rem;
+                background: #fff;
+                color: #333;
+            }
+        }
+    }
+}

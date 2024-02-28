@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Pagination, Mousewheel, Keyboard, Autoplay } from 'swiper';
 import 'swiper/css';
@@ -9,15 +9,78 @@ import 'swiper/css/keyboard';
 import 'swiper/css/autoplay';
 import classNames from 'classnames/bind';
 import styles from './Home.Module.scss';
+import { useNavigate } from 'react-router-dom'; 
 
 const cx = classNames.bind(styles);
 
-// Cài đặt các thành phần Swiper
-// SwiperCore.use([Navigation, Pagination, Mousewheel, Keyboard, Autoplay]);
-
 const Home = () => {
-  return (
-    <div className={cx('home')}>
+  const [films, setFilms] = useState([]);
+  const [currentFilmType, setCurrentFilmType] = useState('nowPlaying');
+  const navigate = useNavigate();
+
+  const handleFilmTypeChange = (filmChange) => {
+    setCurrentFilmType(filmChange);
+  };
+
+  useEffect(() => {
+    // Fetch data from the API
+    fetch('http://localhost:5000/api/film/getfilm')
+      .then((response) => response.json())
+      .then((data) => setFilms(data))
+      .catch((error) => console.error('Error fetching films:', error));
+  }, []);
+
+  const renderFilms = () => {
+    let filteredFilms = [];
+
+    if (currentFilmType === 'nowPlaying') {
+      filteredFilms = films.filter((film) => isNowPlaying(film.releaseDate));
+    } else if (currentFilmType === 'comingSoon') {
+      filteredFilms = films.filter((film) => !isNowPlaying(film.releaseDate));
+    }
+
+    // Sắp xếp các phim theo releaseDate
+    filteredFilms.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
+
+    return filteredFilms.map((film, index) => (
+      <div className={cx('box')} key={index}>
+        <div className="day-comingsoon">
+          <span>{formatDate(film.releaseDate)}</span>
+        </div>
+        <div className={cx('film-image')}>
+          <img src={`data:image/jpeg;base64, ${film.image}`} alt={film.name} />
+        </div>
+        <div className={cx('content')}>
+          <div className={cx('content-detail')}>
+            <h3 className={cx('name-film')}>{film.name}</h3>
+            <div className={cx('button-control')}>
+              <button className={cx('btn-bookingTicket')} onClick={() => handleBuyTicket(film)}>Mua vé</button>
+            </div>
+          </div>
+          <p className={cx('describe')}>{film.title}</p>
+          <span className={cx('movie-genre')}>2D</span>
+        </div>
+      </div>
+    ));
+  };
+
+  const handleBuyTicket = (film) => {
+    navigate(`/show/${film.movieId}`); 
+  };
+
+  const renderFilmSwiper = () => {
+    let filteredFilms = [];
+
+    if (currentFilmType === 'nowPlaying') {
+      filteredFilms = films.filter((film) => isNowPlaying(film.releaseDate));
+    } else if (currentFilmType === 'comingSoon') {
+      filteredFilms = films.filter((film) => !isNowPlaying(film.releaseDate));
+    }
+
+    // Sắp xếp các phim theo releaseDate
+    filteredFilms.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
+
+    return (
       <Swiper
         className="mySwiper"
         autoplay={{
@@ -29,90 +92,66 @@ const Home = () => {
         mousewheel
         keyboard
       >
-        {/* Slide 1 */}
-        <SwiperSlide>
-          <div className={cx('home-wrapper')}>
-            <div className={cx('image-wrapper')}>
-              <img src="./images/poster-1.jpg" alt="" />
-              <div className={cx('content-image')}>
-                <div className={cx('content')}>
-                  <h3>doctor strange 2</h3>
-                  <span>
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                    culpa qui officia deserunt mollit anim id est laborum."
-                  </span>
-                  <div className={cx('button-choose')}>
-                    <button className={cx('btn-booking')}>Booking now</button>
-                    <button className={cx('btn-watch')}>Watch Trailer</button>
+        {filteredFilms.map((film, index) => (
+          <SwiperSlide key={index}>
+            <div className={cx('home-wrapper')}>
+              <div className={cx('image-wrapper')}>
+                <img src={`data:image/jpeg;base64, ${film.image}`} alt={film.name} />
+                <div className={cx('content-image')}>
+                  <div className={cx('content')}>
+                    <h3>{film.name}</h3>
+                    <span>
+                      <p>{film.description}</p>
+                    </span>
+                    <div className={cx('button-choose')}>
+                      <button className={cx('btn-booking')}>Booking now</button>
+                      <button className={cx('btn-watch')}>Watch Trailer</button>
+                    </div>
                   </div>
-                </div>
-                <div className={cx('image-ct')}>
-                  <img src="./images/poster-11.jpg" alt="" />
+                  <div className={cx('image-ct')}>
+                    <img src={`data:image/jpeg;base64, ${film.image}`} alt={film.name} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </SwiperSlide>
-
-        {/* Slide 2 */}
-        <SwiperSlide>
-          <div className={cx('home-wrapper')}>
-            <div className={cx('image-wrapper')}>
-              <img src="./images/poster-2.jpg" alt="" />
-              <div className={cx('content-image')}>
-                <div className={cx('content')}>
-                  <h3>Spiderman</h3>
-                  <span>
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                    dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                    officia deserunt mollit anim id est laborum."
-                  </span>
-                  <div className={cx('button-choose')}>
-                    <button className={cx('btn-booking')}>Booking now</button>
-                    <button className={cx('btn-watch')}>Watch Trailer</button>
-                  </div>
-                </div>
-                <div className={cx('image-ct')}>
-                  <img src="./images/poster-12.jpg" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
-
-        {/* Slide 3 */}
-        <SwiperSlide>
-          <div className={cx('home-wrapper')}>
-            <div className={cx('image-wrapper')}>
-              <img src="./images/poster-3.jpeg" alt="" />
-              <div className={cx('content-image')}>
-                <div className={cx('content')}>
-                  <h3>Caption AMERICA</h3>
-                  <span>
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                    dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                    officia deserunt mollit anim id est laborum."
-                  </span>
-                  <div className={cx('button-choose')}>
-                    <button className={cx('btn-booking')}>Booking now</button>
-                    <button className={cx('btn-watch')}>Watch Trailer</button>
-                  </div>
-                </div>
-                <div className={cx('image-ct')}>
-                  <img src="./images/poster-13.webp" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        ))}
       </Swiper>
+    );
+  };
+
+  const isNowPlaying = (releaseDate) => {
+    const currentDate = new Date();
+    const filmReleaseDate = new Date(releaseDate);
+
+    // Tính số ngày giữa ngày hiện tại và releaseDate
+    const diffTime = Math.abs(filmReleaseDate - currentDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 20;
+  };
+
+  const formatDate = (releaseDate) => {
+    const date = new Date(releaseDate);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  return (
+    <div className={cx('home')}>
+      {renderFilmSwiper()}
+
+      <section className={cx('film-container')}>
+        {/* Render film buttons for different types */}
+        <div className={cx('button-panigation')}>
+          <div className={cx('center')}>
+            <button onClick={() => handleFilmTypeChange('nowPlaying')}>Phim đang chiếu</button>
+            <button onClick={() => handleFilmTypeChange('comingSoon')}>Phim sắp chiếu</button>
+            <button onClick={() => handleFilmTypeChange('specialShow')}>Suất chiếu đặc biệt</button>
+          </div>
+        </div>
+
+        {/* Render films */}
+        <section className={cx('modelFilm-container')}>{renderFilms()}</section>
+      </section>
     </div>
   );
 };

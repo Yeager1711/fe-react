@@ -1,0 +1,76 @@
+.cinemas {
+
+    .button-controllers {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        button {
+            padding: .5rem 2rem;
+            border-radius: .3rem;
+            background: #4879ea;
+            color: #fff;
+
+            &:hover {
+                transform: scale(.99);
+                box-shadow: 0 .5rem 1rem rgba(255, 255, 255, .3);
+            }
+        }
+    }
+
+    .cinemas-container {
+        margin-top: 2rem;
+        background: #555;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+        gap: 1.5rem;
+
+        .cinemas {
+            padding: 1.5rem 2rem;
+            background: #333;
+            columns: 1;
+            border-radius: .3rem;
+
+            .info-room {
+                .name-cinemas,
+                .total-seats {
+                    display: flex;
+                    font-size: 1.4rem;
+                    color: #fff;
+                    padding: 1rem 0;
+
+                    p {
+                        margin-left: .5rem;
+
+                        &:nth-child(1) {
+                            color: #e18732;
+                            font-weight: 550;
+                        }
+                    }
+                }
+            }
+
+            .seat-selected {
+                span {
+                    display: block;
+                    font-size: 1.3rem;
+                    color: #18b77d;
+                    font-size: 1.5rem;
+
+                    p{
+                        display: inline-block;
+                        color: #fff;
+                    }
+                   
+                   svg {
+                        margin-right: 1rem;
+                        color: #1885b7;
+                        font-size: 1.5rem;
+                   }
+                }
+            }
+
+        }
+    }
+}

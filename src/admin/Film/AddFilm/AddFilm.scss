@@ -1,0 +1,129 @@
+.admin-addFilm {
+    .addFilm-container {
+        padding: .1rem;
+        background: #555;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        margin-top: 2rem;
+        color: #fff;
+        font-size: 1.6rem;
+
+        .images-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+
+            .box-images {
+                padding: 2rem;
+                width: 100%;
+                border: .1rem dashed #fff;
+                text-align: center;
+                color: #ccc;
+                font-weight: 500;
+                text-transform: uppercase;
+                border-radius: .5rem;
+                font-size: 1.5rem;
+
+                &:hover {
+                    cursor: pointer;
+                    border: .1rem dashed #f69d43;
+                }
+            }
+        }
+
+        .wrapper-input {
+            .detail {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(38rem, 1fr));
+                gap: 2rem;
+
+                .box-input {
+                    span {
+                        display: block;
+                        padding: .7rem 0;
+                    }
+
+                    input {
+                        padding: .6rem 1.5rem;
+                        background: none;
+                        border: .1rem solid rgba(255,255,255, .4);
+                        border-radius: .5rem;
+                        width: 100%;
+                        font-size: 16px;
+                        color: #fff;
+
+                        &::placeholder {
+                            font-size: 1.4rem;
+                            color: #dbdbdb;
+                        }
+                    }
+
+                    select {
+                        width: 50%;
+                        padding: .6rem 1.5rem;
+                        background: none;
+                        border: .1rem solid rgba(255,255,255, .4);
+                        color: #dbdbdb;
+                        border-radius: .5rem;
+                        font-size: 16px;
+                       
+                        option {
+                            color: #333;
+                        }
+                    }
+                }
+            }
+
+            .trailer {
+                padding: .1rem;
+                background: #555;
+                border-radius: 1rem;
+                margin-top: 2rem;
+                color: #fff;
+                font-size: 1.6rem;
+
+                .trailer-input {
+                    span {
+                        display: block;
+                        padding: .7rem 0;
+                    }
+
+                    input {
+                        padding: .6rem 1.5rem;
+                        background: none;
+                        border: .1rem solid rgba(255,255,255, .4);
+                        border-radius: .5rem;
+                        width: 70%;
+                        font-size: 16px;
+                        color: #fff;
+
+                        &::placeholder {
+                            font-size: 1.4rem;
+                            color: #dbdbdb;
+                        }
+                    }
+                    
+                }
+            }
+        }
+
+        .btn-addFilm {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: .7rem 1.5rem;
+            background: #f69d43;
+            color: #fff;
+            font-size: 1.6rem;
+            border-radius: .5rem;
+            width: 100%;
+
+            &:hover {
+                transform: scale(.99);
+                background: none;
+                border: .1rem solid #f69d43;
+                color: #f69d43;
+            }
+        }
+    }
+}

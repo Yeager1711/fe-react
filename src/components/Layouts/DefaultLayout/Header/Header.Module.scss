@@ -1,5 +1,5 @@
 .wrapper {
-    padding: 1.4rem 10%;
+    padding: 1.4rem 6%;
     position: fixed;
     top: 0; left: 0; right: 0;
     display: flex;
@@ -8,7 +8,7 @@
     z-index: 99;
     max-width: 100%;
     border-bottom: .1rem solid #dbdbdb;
-    background: rgba(0,0,0, .5);
+    background: #222;
     box-shadow: 0 .5rem 1rem rgba(0,0,0, .2);
 
     .logo {
@@ -22,6 +22,9 @@
     }
 
     .navbar {
+        display: flex;
+        align-items: center;
+
         a {
              font-size: 1.5rem;
              padding: .5rem .7rem;
@@ -38,27 +41,59 @@
              i {
                  font-size: 2rem;
              }
-         }
+        }
 
-         .account-menu {
-            position: absolute;
-            top: 90%;
-            right: 10%;
-            padding: .5rem 4rem;
-            background: #fff;
-            border-radius: 1rem;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
 
-            .btn-controller {
-                color: #333;
-                text-align: center;
-                display: block;
-                margin: auto;
-                width: 100%;
-                
-                &:nth-child(1) {
-                    margin-bottom: .5rem;
+            img {
+                object-fit: cover;
+                width: 3.3rem;
+                height: 3.3rem;
+                border-radius: 5rem;
+                margin-left: 1rem;
+            }
+
+            .fullname {
+                color: #fff;
+                font-size: 1.4rem;
+            }
+
+            .dropdown {
+                position: absolute;
+                top: 120%;
+                right: 0;
+                width: 20rem;
+                background: #fff;
+                border-radius: .4rem;
+                padding: 1rem;
+
+                .btn-info {
+                    display: block;
+                    color: #333;
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    margin-left: 0;
+                    text-align: center;
+                }
+
+                .logout-btn {
+                    display: inline-block;
+                    margin: auto;
+                    width: 100%;
+                    padding: .5rem;
+                    background: #5353ec;
+                    color: #fff;
+                    
+                    svg {
+                        margin-right: 1rem;
+                    }
                 }
             }
-         }
+        }
+
      }
 }

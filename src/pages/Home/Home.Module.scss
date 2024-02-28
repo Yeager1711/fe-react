@@ -1,10 +1,14 @@
 .home {
+    background: #222;
     .home-wrapper {
+        padding: 3rem 6%;
+        
         .image-wrapper {
             position: relative;
-            max-width: 100%;
             object-fit: cover;
             display: flex;
+            border-radius: 5rem;
+            margin-top: 5rem;
 
             &::before {
                 content: "";
@@ -15,13 +19,14 @@
                 bottom: 0;
                 background: rgba(0,0,0, .5);
                 z-index: 1;
+                border-radius: 3rem;
             }
 
             img {
-               
                 width: 100%;
-                height: 750px;
+                height: 35rem;
                 object-fit: cover;
+                border-radius: 3rem;
             }
 
             .content-image {
@@ -48,12 +53,27 @@
 
                     span {
                         color: #fff;
-                        font-size: 1.6rem;
+                        font-size: 1.5rem;
                         margin-bottom: .5rem;
                         letter-spacing: .02rem;
+                        height: 1rem;
                         line-height: 1.4;
                         text-transform: none;
-                    }
+                        width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        -webkit-box-orient: vertical; 
+                      
+                        p {
+                          overflow: hidden; 
+                          display: -webkit-box; 
+                          -webkit-box-orient: vertical; 
+                          -webkit-line-clamp: 6; 
+                          color: #fff; 
+                          margin: 0;
+                        }
+                      }
+                      
 
                 }
 
@@ -61,14 +81,286 @@
                     flex: 1 1 22rem;
 
                     img {
-                        width: 35rem;
-                        height: 50rem;
+                        width: 22rem;
+                        height: 30rem;
                         object-fit: cover;
                         border-radius: 1rem;
                         box-shadow: 0 .5rem 1rem rgba(255,255,255,.3);
                     }
                 }
             }
+        }
+    }
+
+    .film-container {
+        background-color: #f9fbfd;
+        // background: #222;
+
+        .button-panigation {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 2rem;
+            
+
+            .center {
+                margin: auto;
+                background: #edf2f9;
+                border-radius: 5rem;
+                overflow: hidden;
+
+                button {
+                    padding: 1rem 5rem;
+                    background: #edf2f9;
+                    color: #f69d43;
+                    font-size: 1.9rem;
+                    font-weight: 550;
+                    cursor: pointer;
+
+                    &:nth-child(2) {
+                        border-left: .2rem solid #dbdbdb;
+                        border-right: .2rem solid #dbdbdb;
+                    }
+                    
+                }
+            }
+        }
+
+        .modelFilm-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(38rem, 1fr));
+            gap: 1.3rem;
+
+            .box {
+               position: relative;
+               background: #090909;
+               border-radius: .5rem;
+               overflow: hidden;
+               padding: 0 0 1rem 0;
+               box-shadow: 0 .5rem 1rem rgba(0,0,0, .3);
+
+               &:hover {
+                    transform: scale(.99);
+                    cursor: pointer;
+                    transition: .3s linear;
+               }
+
+                .day-comingsoon {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    padding: .7rem 1.3rem;
+                    background: #f5b324;
+                    color: #333;
+                    font-weight: 550;
+                    font-size: 1.5rem;
+                    border-bottom-left-radius: 1rem;
+                }
+
+                .film-image {
+                    
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+
+                .content {
+                    padding: 1.5rem 1rem;
+                    
+                    .content-detail {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+
+                        .button-control {
+    
+                            .btn-bookingTicket {
+                                padding: .5rem 1.5rem;
+                                background: none;
+                                border: .1rem solid #f69d43;
+                                color: #f69d43;
+                                border-radius: .3rem;
+
+                                &:hover {
+                                    background: #f69d43;
+                                    color: #333;
+                                    font-weight: 550;
+                                    cursor: pointer;
+                                    transition: .3s linear;
+                               }
+                            }
+                        }
+
+
+                        .name-film {
+                           color: #fff;
+                           font-weight: 600;
+                           font-size: 2rem;
+                           text-transform: uppercase;
+                        }
+
+                       
+                    }
+
+                    .describe {
+                        padding: .7rem 0;
+                        width: 70%;
+                        color: #909090;
+                        font-size: 1.4rem;
+                        text-transform: capitalize;
+                        margin-bottom: 1rem;
+                    }
+
+                    .movie-genre {
+                        border: .1rem solid #f69d43;
+                        color: #fff;
+                        font-size: 1.5rem;
+                        padding: .5rem .9rem;
+                        
+                    }
+                }
+            }
+        }
+
+        .list-comingsoon {
+            background: #222;
+            border-radius: .5rem;
+
+            .title {
+                text-align: center;
+                font-size: 2.2rem;
+                color: #f69d43;
+                display: flex;
+                align-items: center;
+
+                span {
+                    padding: 0 2rem;
+                }
+
+                &::before {
+                    border: 2px solid #f5b324;
+                    border-left: none;
+                    border-right: none;
+                    content: '';
+                    display: block;
+                    -ms-flex: 1 1 auto;
+                    flex: 1 1 auto;
+                    height: 8px;
+                }
+
+                &::after {
+                    border: 2px solid #f5b324;
+                    border-left: none;
+                    border-right: none;
+                    content: '';
+                    display: block;
+                    -ms-flex: 1 1 auto;
+                    flex: 1 1 auto;
+                    height: 8px;
+                }
+            }
+
+            .listComingsoon-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(44rem, 1fr));
+                gap: 1.3rem;
+                margin-top: 4rem;
+    
+                .box {
+                    position: relative;
+                    background: #090909;
+                    border-radius: .5rem;
+                    overflow: hidden;
+                    box-shadow: 0 .5rem 1rem rgba(0,0,0, .3);
+                    padding: 0 0 1rem 0;
+     
+                    &:hover {
+                         transform: scale(.99);
+                         cursor: pointer;
+                         transition: .3s linear;
+                    }
+     
+                     .day-comingsoon {
+                         position: absolute;
+                         top: 0;
+                         right: 0;
+                         padding: .7rem 1.3rem;
+                         background: #f5b324;
+                         color: #333;
+                         font-weight: 550;
+                         font-size: 1.5rem;
+                         border-bottom-left-radius: 1rem;
+                     }
+     
+                     .film-image {
+                         
+                         img {
+                             width: 100%;
+                             height: 100%;
+                             object-fit: cover;
+                         }
+                     }
+     
+                     .content {
+                         padding: 1.5rem 1rem;
+                         
+                         .content-detail {
+                             display: flex;
+                             align-items: center;
+                             justify-content: space-between;
+     
+                             .button-control {
+         
+                                 .btn-bookingTicket {
+                                     padding: .5rem 1.5rem;
+                                     background: none;
+                                     border: .1rem solid #f69d43;
+                                     color: #f69d43;
+                                     border-radius: .3rem;
+     
+                                     &:hover {
+                                         background: #f69d43;
+                                         color: #333;
+                                         font-weight: 550;
+                                         cursor: pointer;
+                                         transition: .3s linear;
+                                    }
+                                 }
+                             }
+     
+     
+                             .name-film {
+                                color: #fff;
+                                font-weight: 600;
+                                font-size: 2rem;
+                                text-transform: uppercase;
+                             }
+     
+                            
+                         }
+     
+                         .describe {
+                             padding: .7rem 0;
+                             width: 70%;
+                             color: #909090;
+                             font-size: 1.4rem;
+                             text-transform: capitalize;
+                             margin-bottom: 1rem;
+                         }
+     
+                         .movie-genre {
+                            border: .1rem solid #f69d43;
+                            color: #fff;
+                            font-size: 1.5rem;
+                            padding: .5rem;
+                            font-size: 1.5rem;
+                            padding: .5rem .9rem;
+                         }
+                     }
+                 }
+            } 
         }
     }
 }

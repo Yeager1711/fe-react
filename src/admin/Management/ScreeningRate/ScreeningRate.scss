@@ -1,0 +1,96 @@
+.screeningrate {
+    min-height: 100vh;
+    .button-controllers {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        button {
+            padding: .5rem 2rem;
+            border-radius: .3rem;
+            background: #4879ea;
+            color: #fff;
+
+            &:hover {
+                transform: scale(.99);
+                box-shadow: 0 .5rem 1rem rgba(255, 255, 255, .3);
+            }
+        }
+    }
+
+    .screeningrate-container {
+        margin-top: 2rem;
+        background: #555;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(52rem, 1fr));
+        gap: 1.5rem;
+
+        .cinemas {
+            padding: 1.5rem 2rem;
+            background: #333;
+            columns: 1;
+            overflow: hidden;
+            border-radius: .3rem;
+
+            .info-room {
+                .name-cinemas,
+                .name-nowShowing     {
+                    display: flex;
+                    font-size: 1.4rem;
+                    color: #fff;
+                    padding: 1rem 0;
+
+                    p {
+                        margin-left: .5rem;
+
+                        &:nth-child(1) {
+                            color: #e18732;
+                            font-weight: 550;
+                        }
+                    }
+                }
+            }
+
+            .time-rate {
+                display: flex;
+                align-items: center;
+                overflow: auto;
+                padding: 2rem; 
+
+                &::-webkit-scrollbar {
+                    background: #fff;
+                   height: .8rem;
+                   border-radius: 5rem;
+                    
+                }
+
+                &::-webkit-scrollbar-button {
+                    border-radius: 5rem;
+                    width: 100%;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                   border-radius: 5rem;
+                   background: #d18034;
+                   cursor: pointer;
+                }
+
+                span {
+                    padding: .7rem 1.5rem;
+                    font-size: 1.4rem;
+                    color: #fff;
+                    border-radius: .5rem;
+                    border: .1rem solid #dbdbdb;
+                    margin-right: 1rem;
+                    
+                    &.active {
+                        background: #999;
+                        color: #dbdbdb;
+                    }
+                }
+            }
+
+        }
+    }
+}

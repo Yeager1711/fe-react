@@ -1,0 +1,23 @@
+
+.wrapper-admin {
+    background: #333;
+    display: flex;
+    gap: 2rem;
+    min-height: 100vh;
+
+    .header {
+        flex: 1 1 0;
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 2rem;
+    }
+
+    .container-admin {
+        flex: 1 1 82rem;
+        padding: 3rem;
+        background: #222;
+        border-radius: 2rem;
+        width: 100%;
+        min-height: 100vh;
+    }
+}
