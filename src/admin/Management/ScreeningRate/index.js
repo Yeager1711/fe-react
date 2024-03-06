@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styles from './ScreeningRate.scss';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
@@ -14,6 +15,7 @@ function ScreeningRate() {
   const [rooms, setRooms] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [isCreating, setIsCreating] = useState(true);
+  const [cinema, setCinema] = useState(null);
 
   const fetchScreenings = useCallback(async () => {
     try {
@@ -92,6 +94,26 @@ function ScreeningRate() {
     }
   };
 
+  // call api cinema
+
+  useEffect(() => {
+    const fetchCinema = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/cinema/getCinema/1`);
+        setCinema(response.data.cinema);
+      } catch (error) {
+        console.log('Error fetching cinema:', error);
+        Swal.fire({
+          title: 'Lỗi!',
+          text: 'Đã xảy ra lỗi khi tải thông tin Rạp.',
+          icon: 'error',
+        });
+      }
+    };
+
+    fetchCinema();
+  }, []);
+
   const formatTime = (time) => {
     const date = new Date(time);
     const hours = date.getHours().toString().padStart(2, '0'); // Lấy giờ và padding 0 nếu cần
@@ -127,13 +149,13 @@ function ScreeningRate() {
       });
     });
 
-    const handleCreateOrUpdateScreening = async() =>{
-      if(isCreating) {
-        handleCreateScreening()
-      }else {
+    const handleCreateOrUpdateScreening = async () => {
+      if (isCreating) {
+        handleCreateScreening();
+      } else {
         handleUpdateScreening();
       }
-    }
+    };
 
     const handleUpdateScreening = async () => {
       try {
@@ -167,7 +189,7 @@ function ScreeningRate() {
               {film.screenings
                 .map((screening) => {
                   const startTime = new Date(screening.startTime);
-                  const formattedStartTime = formatTime(startTime); 
+                  const formattedStartTime = formatTime(startTime);
                   return { ...screening, formattedStartTime };
                 })
                 .sort((a, b) => {
@@ -242,12 +264,21 @@ function ScreeningRate() {
         </div>
 
         <div>
-          <button onClick={handleCreateScreening}>Tạo Suất chiếu</button>
+          <button onClick={handleCreateScreening}>Tạo Suất chiếu</button>F
         </div>
       </div>
 
       <div className={cx('screeningrate-container')}>
-        <h1>Lịch chiếu: </h1>
+        <div className={cx('wrapper-title')}>
+          <h3>Danh sách lịch chiếu: </h3>
+          {cinema && (
+            
+            <h2>
+              <FontAwesomeIcon icon={faLocationDot} />
+              {cinema.name} - {cinema.location}
+            </h2>
+          )}
+        </div>
         <div className={cx('dates-container')}>
           {Object.keys(groupedScreenings).map((date, dateIndex) => (
             <div key={dateIndex} onClick={() => handleDateClick(date)} className={cx('date-box')}>
