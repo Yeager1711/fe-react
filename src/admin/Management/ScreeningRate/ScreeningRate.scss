@@ -1,5 +1,6 @@
 .screeningrate {
     min-height: 100vh;
+
     .button-controllers {
         display: flex;
         align-items: center;
@@ -22,75 +23,76 @@
         margin-top: 2rem;
         background: #555;
         padding: 1rem;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(52rem, 1fr));
-        gap: 1.5rem;
 
-        .cinemas {
-            padding: 1.5rem 2rem;
-            background: #333;
-            columns: 1;
-            overflow: hidden;
-            border-radius: .3rem;
+        h1 {
+            font-size: 2.5rem;
+            color: #d18034;
+            margin-left: 1rem;
+        }
 
-            .info-room {
-                .name-cinemas,
-                .name-nowShowing     {
-                    display: flex;
-                    font-size: 1.4rem;
-                    color: #fff;
-                    padding: 1rem 0;
+        .dates-container {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
 
-                    p {
-                        margin-left: .5rem;
+            .date-box {
+                padding: 1rem 1.5rem;
+                background: #333;
+                color: #fff;
+                margin: 0 1rem;
+                font-size: 1.5rem;
+                font-weight: 600;
+                border-radius: .5rem;
+                border: .1rem solid #f3ea28;
+                
+                &:hover {
+                    cursor: pointer;
+                    background: #f3ea28;
+                    color: #639;
+                }
+            }
+        }
 
-                        &:nth-child(1) {
-                            color: #e18732;
-                            font-weight: 550;
+        .film-boxes-container {
+            margin-top: 1rem;
+
+            .film-boxes {
+                padding: 1.5rem;
+
+                .wrapper-info {
+                    padding: 1.5rem;
+                    border-radius: 1rem;
+                    background: #64748b;
+                    overflow: auto  ;
+                    margin-top: 1.5rem;
+
+                    
+
+                    .wrapper-time {
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: center;
+                        gap: 1.5rem;
+
+                        .timeScreening {
+                            margin-top: 1rem;
+                            .time {
+                                .time-rate {
+                                    span {
+                                        p {
+                                           padding: .8rem 2rem; 
+                                           border: .1rem solid #dbdbdb;
+                                           color: #fff;
+                                           font-size: 1.4rem;
+                                           border-radius: .5rem;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-
-            .time-rate {
-                display: flex;
-                align-items: center;
-                overflow: auto;
-                padding: 2rem; 
-
-                &::-webkit-scrollbar {
-                    background: #fff;
-                   height: .8rem;
-                   border-radius: 5rem;
-                    
-                }
-
-                &::-webkit-scrollbar-button {
-                    border-radius: 5rem;
-                    width: 100%;
-                }
-
-                &::-webkit-scrollbar-thumb {
-                   border-radius: 5rem;
-                   background: #d18034;
-                   cursor: pointer;
-                }
-
-                span {
-                    padding: .7rem 1.5rem;
-                    font-size: 1.4rem;
-                    color: #fff;
-                    border-radius: .5rem;
-                    border: .1rem solid #dbdbdb;
-                    margin-right: 1rem;
-                    
-                    &.active {
-                        background: #999;
-                        color: #dbdbdb;
-                    }
-                }
-            }
-
-        }
+        } 
     }
 }

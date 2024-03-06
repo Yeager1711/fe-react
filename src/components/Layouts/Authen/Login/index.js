@@ -78,7 +78,6 @@ function Login() {
             <input type="password" name="password" onChange={handleInput} placeholder="Enter your password" />
           </div>
 
-          {/* Hiển thị thông báo lỗi dưới các trường nhập liệu */}
           {formLogin.error && <div className={cx('error-valid')}>{formLogin.error}</div>}
 
           <div className={cx('authen-connect')}>
