@@ -24,11 +24,14 @@ const publicRoutes = [
     {path: "/authen/register", component: Register},
 
     //check-ticket
-    {path: "/check-ticket", component: CheckTicket},
+    {path: "/show/check-ticket/:screeningId/:movieId/:roomId", component: CheckTicket},
 
     // {path: "/setup", component: Setup},
     //setchair
-    { path: '/setchair/:movieId', component: SetChair },
+    // { path: '/setchair/:screeningId', component: SetChair },
+    { path: '/setchair/show/:screeningId/:movieId/:roomId', component: SetChair },
+    // { path: '/setchair/:movieId', component: SetChair },
+
 
     // detial movie
     { path: '/show/:movieId', component: DetailMovie },

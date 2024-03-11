@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCouch, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import styles from './SetChair.scss';
 import classNames from 'classnames';
-import { useParams } from 'react-router-dom';
-
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
@@ -17,56 +16,19 @@ function SetChair() {
   const totalAmount = quantity * ticketPrice;
 
   const [movie, setMovie] = useState(null);
-  const { movieId, roomId  } = useParams();
+  const [screening, setScreening] = useState(null);
+  const { movieId, roomId, cinemaId, screeningId } = useParams();
+  const [roomName, setRoomName] = useState('');
+  const [cinema, setCinema] = useState('');
 
   const [roomSeats, setRoomSeats] = useState([]);
   const [seatStatus, setSeatStatus] = useState({});
-  const [selectedColor, setSelectedColor] = useState('#25b392');
-
-  useEffect(() => {
-    const fetchMovie = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/film/getfilm/${movieId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch movie');
-        }
-        const data = await response.json();
-        setMovie(data);
-      } catch (error) {
-        console.error('Error fetching movie:', error);
-      }
-    };
-
-    if (movieId) {
-      fetchMovie();
-    }
-
-    const fetchRoomSeats = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/rooms/getRoom/${roomId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch room seats');
-        }
-        const data = await response.json();
-        console.log(data)
-        setRoomSeats(data.seats);
-      } catch (error) {
-        console.error('Error fetching room seats:', error);
-      }
-    };
-
-    if (roomId) {
-      fetchRoomSeats();
-    }
-  }, [movieId, roomId]);
-
   const formattedPrice = totalAmount.toLocaleString('vi-VN', {
     style: 'currency',
     currency: 'VND',
   });
 
-  const alphabet = Array.from({ length: 10 }, (_, index) => String.fromCharCode(65 + index));
-  const seatsPerRow = 12;
+  const navigate = useNavigate();
 
   const handleSeatClick = (rowIndex, seatIndex) => {
     const seatKey = `${rowIndex}-${seatIndex}`;
@@ -76,62 +38,14 @@ function SetChair() {
     }));
   };
 
-  const isGapInRow = (rowIndex) => {
-    const rowKey = rowIndex.toString();
-    let isGapFound = false;
-
-    for (let seatIndex = 0; seatIndex < seatsPerRow - 1; seatIndex++) {
-      const currentSeatKey = `${rowKey}-${seatIndex}`;
-      const nextSeatKey = `${rowKey}-${seatIndex + 1}`;
-
-      if (seatStatus[currentSeatKey] && !seatStatus[nextSeatKey]) {
-        isGapFound = true;
-        break;
-      }
-    }
-
-    return isGapFound;
-  };
-
-  const isGapInColumn = (seatIndex) => {
-    let isGapFound = false;
-
-    for (let rowIndex = 0; rowIndex < alphabet.length - 1; rowIndex++) {
-      const currentSeatKey = `${rowIndex}-${seatIndex}`;
-      const nextSeatKey = `${rowIndex + 1}-${seatIndex}`;
-
-      if (seatStatus[currentSeatKey] && !seatStatus[nextSeatKey]) {
-        isGapFound = true;
-        break;
-      }
-    }
-
-    return isGapFound;
-  };
-
   const handleCreateTicket = () => {
-    const hasGapInRows = Object.keys(seatStatus).some((seatKey) => isGapInRow(seatKey));
-    const hasGapInColumns = Object.keys(seatStatus).some((seatKey) => isGapInColumn(seatKey));
-
-    if (hasGapInColumns || hasGapInRows) {
-      Swal.fire({
-        icon: 'warning',
-        title: '',
-        text: 'Vui lòng chọn ghế một cách liên tục, không bỏ trống khoảng trống giữa hai ghế hoặc các hàng cột.',
-      });
-      return;
-    }
-
     const newlySelectedSeats = Object.entries(seatStatus)
       .filter(([_, isSelected]) => isSelected)
-      .map(([seatKey]) => {
-        const [rowIndex, seatIndex] = seatKey.split('-');
-        return `${alphabet[rowIndex]}${parseInt(seatIndex) + 1}`;
-      });
-
-    const confirmationMessage = `Bạn đã chọn ghế: ${newlySelectedSeats.join(', ')}`;
+      .map(([seatKey]) => seatKey);
 
     if (newlySelectedSeats.length > 0) {
+      const confirmationMessage = `Bạn vừa chọn ghế: ${newlySelectedSeats.join(', ')}`;
+
       Swal.fire({
         icon: 'success',
         title: 'Xác nhận',
@@ -151,27 +65,171 @@ function SetChair() {
     }
   };
 
-  const renderSeats = () => {
-    return roomSeats.map((row, rowIndex) => (
-      <div key={rowIndex} className={cx('row')}>
-        {row.map((isSeatBooked, seatIndex) => {
-          const seatKey = `${rowIndex}-${seatIndex}`;
+  const saveToSessionStorage = () => {
+    const checkoutInfo = {
+      movie,
+      screening,
+      roomName,
+      selectedSeats,
+      date: screening ? new Date(screening.startTime).toLocaleDateString() : null,
+      totalPrice: formattedPrice,
+    };
+    sessionStorage.setItem('checkoutInfo', JSON.stringify(checkoutInfo));
+  };
 
-          return (
-            <div
-              key={seatIndex}
-              className={cx('chair', { booked: isSeatBooked })}
-              style={{ backgroundColor: isSeatBooked ? selectedColor : '' }}
-              onClick={() => handleSeatClick(rowIndex, seatIndex)}
-            >
-              <FontAwesomeIcon icon={faCouch} />
-              <p>{`${String.fromCharCode(65 + rowIndex)}${seatIndex + 1}`}</p>
-              {isSeatBooked && <FontAwesomeIcon icon={faCheck} className={cx('icon-check')} />}
-            </div>
-          );
-        })}
-      </div>
-    ));
+  useEffect(() => {
+    const fetchScreening = async () => {
+      try {
+        const responseScreening = await fetch(`http://localhost:5000/api/setchair/getScreening/${screeningId}`);
+        if (!responseScreening.ok) {
+          throw new Error('Failed to fetch screening');
+        }
+        const data = await responseScreening.json();
+        setScreening(data.screening);
+      } catch (error) {
+        console.error('Error fetching screening:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch screening data',
+        });
+      }
+    };
+    if (screeningId) {
+      fetchScreening();
+    }
+  }, [screeningId]);
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/film/getfilm/${movieId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch movie');
+        }
+        const data = await response.json();
+        setMovie(data);
+      } catch (error) {
+        console.error('Error fetching movie:', error);
+      }
+    };
+
+    if (movieId) {
+      fetchMovie();
+    }
+
+    const fetchRoom = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/rooms/getRoom/${roomId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch room seats');
+        }
+        const data = await response.json();
+        setRoomSeats(data.seats);
+        setRoomName(data.roomName);
+      } catch (error) {
+        console.error('Error fetching room seats:', error);
+      }
+    };
+
+    if (roomId) {
+      fetchRoom();
+    }
+  }, [movieId, roomId]);
+
+  const fetchSeatsForMovie = useCallback(async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/seats/getSeatRoom/${movieId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch seats for the room');
+      }
+      const data = await response.json();
+      setRoomSeats(data);
+    } catch (error) {
+      console.error('Error fetching seats for the room:', error);
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    if (roomId) {
+      fetchSeatsForMovie();
+    }
+  }, [roomId]);
+
+  const fecthCinema = async () => {
+    const resposeCinema = await fetch(`http://localhost:5000/api/cinema/getCinema/1`);
+    if (!resposeCinema.ok) {
+      throw new Error('Failed to fetch local for the Cinema');
+    }
+    const data = await resposeCinema.json();
+    setCinema(data);
+  };
+
+  useEffect(() => {
+    if (cinemaId) {
+      fecthCinema();
+    }
+  }, [cinemaId]);
+
+  const formatTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    return `${formattedHours}:${formattedMinutes}`;
+  };
+
+  const sortSeatsByRow = (seats) => {
+    const seatsByRow = {};
+    seats.forEach((seat) => {
+      const { rowNumber, seatNumber } = seat;
+      const rowKey = String.fromCharCode(65 + parseInt(rowNumber) - 1);
+      if (!seatsByRow[rowKey]) {
+        seatsByRow[rowKey] = [];
+      }
+      seatsByRow[rowKey].push(seatNumber);
+    });
+    for (let rowKey in seatsByRow) {
+      seatsByRow[rowKey].sort((a, b) => a - b);
+    }
+    return seatsByRow;
+  };
+
+  const ROW_COUNT = 12;
+  const SEAT_COUNT = 12;
+
+  const renderSeats = () => {
+    if (!roomSeats || roomSeats.length === 0) {
+      return <div>Loading...</div>;
+    }
+
+    const seatsByRow = sortSeatsByRow(roomSeats);
+
+    return Object.keys(seatsByRow).map((rowKey) => {
+      const isSeatBooked = false;
+      const rowSeats = seatsByRow[rowKey];
+      const seatComponents = [];
+      for (let i = 1; i <= SEAT_COUNT; i++) {
+        const seatNumber = i < 10 ? `0${i}` : `${i}`;
+        const seatKey = `${rowKey}-${seatNumber}`;
+        seatComponents.push(
+          <div
+            key={seatKey}
+            className={cx('chair', { booked: isSeatBooked, active: seatStatus[seatKey] })}
+            onClick={() => handleSeatClick(rowKey, seatNumber)}
+          >
+            <FontAwesomeIcon icon={faCouch} />
+            <p>{`${rowKey}-${seatNumber}`}</p>
+            {isSeatBooked && <FontAwesomeIcon icon={faCheck} className={cx('icon-check')} />}
+          </div>,
+        );
+      }
+      return (
+        <div className={cx('row')} key={rowKey}>
+          {seatComponents}
+        </div>
+      );
+    });
   };
 
   return (
@@ -195,6 +253,11 @@ function SetChair() {
                 </p>
                 <p>
                   <FontAwesomeIcon icon={faCouch} />
+                  Ghế đang được chọn <FontAwesomeIcon icon={faTimes} />
+                </p>
+
+                <p>
+                  <FontAwesomeIcon icon={faCouch} />
                   Ghế đã được đặt <FontAwesomeIcon icon={faTimes} />
                 </p>
               </div>
@@ -202,7 +265,6 @@ function SetChair() {
 
             <div className={cx('controll-btn')}>
               <button onClick={handleCreateTicket} className={cx('btn-ticket')}>
-                {' '}
                 Xác nhận chọn ghế
               </button>
             </div>
@@ -241,20 +303,26 @@ function SetChair() {
                   <p>Quận 9, TP. Thủ Đức</p>
                 </div>
 
-                <div className={cx('box')}>
-                  <span>Rạp</span>
-                  <p>Cenima N0-1</p>
-                </div>
+                {roomName && (
+                  <div className={cx('box')}>
+                    <span>Rạp</span>
+                    <p>{roomName}</p>
+                  </div>
+                )}
 
-                <div className={cx('box')}>
-                  <span>Chọn suất chiếu</span>
-                  <p>23:00</p>
-                </div>
+                {screening && (
+                  <div className={cx('box')}>
+                    <span>Chọn suất chiếu</span>
+                    <p>{formatTime(new Date(screening.startTime))}</p>
+                  </div>
+                )}
 
-                <div className={cx('box')}>
-                  <span>Ngày chiếu</span>
-                  <p>23/01/2024</p>
-                </div>
+                {screening && (
+                  <div className={cx('box')}>
+                    <span>Ngày chiếu</span>
+                    <p>{new Date(screening.startTime).toLocaleDateString()}</p>
+                  </div>
+                )}
 
                 <div className={cx('box')}>
                   <span>Số lượng</span>
@@ -274,8 +342,15 @@ function SetChair() {
             </div>
 
             <div className={cx('actionButtons-checkout')}>
-              <a href="/show">Trở lại</a>
-              <a href="/check-ticket">Kiểm tra</a>
+              <Link to={`/show/${movieId}`}>Trở lại</Link>
+              {screening && (
+                <Link
+                  to={`/show/check-ticket/${screening.screeningId}/${screening.movieId}/${movieId}`}
+                  onClick={saveToSessionStorage}
+                >
+                  Kiểm tra
+                </Link>
+              )}
             </div>
           </div>
         </section>

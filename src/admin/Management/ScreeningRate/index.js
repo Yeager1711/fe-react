@@ -116,8 +116,8 @@ function ScreeningRate() {
 
   const formatTime = (time) => {
     const date = new Date(time);
-    const hours = date.getHours().toString().padStart(2, '0'); // Lấy giờ và padding 0 nếu cần
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // Lấy phút và padding 0 nếu cần
+    const hours = date.getHours().toString().padStart(2, '0'); 
+    const minutes = date.getMinutes().toString().padStart(2, '0'); 
     return `${hours}:${minutes}`;
   };
 
@@ -150,7 +150,7 @@ function ScreeningRate() {
     });
 
     const handleCreateOrUpdateScreening = async () => {
-      if (isCreating) {
+      if (isCreating) { 
         handleCreateScreening();
       } else {
         handleUpdateScreening();
@@ -185,38 +185,43 @@ function ScreeningRate() {
         {filmsToShow.map((film, index) => (
           <div key={index} className={cx('wrapper-info')}>
             <h3>{film.name}</h3>
-            <div className={cx('wrapper-time')}>
-              {film.screenings
-                .map((screening) => {
-                  const startTime = new Date(screening.startTime);
-                  const formattedStartTime = formatTime(startTime);
-                  return { ...screening, formattedStartTime };
-                })
-                .sort((a, b) => {
-                  return new Date(a.startTime) - new Date(b.startTime);
-                })
-                .map((screening, index) => {
-                  const startTime = new Date(screening.startTime);
-                  if (startTime.getHours() > 7 || (startTime.getHours() === 9 && startTime.getMinutes() >= 0)) {
-                    if (startTime.getHours() < 23 || (startTime.getHours() === 23 && startTime.getMinutes() <= 59)) {
-                      return (
-                        <div className={cx('timeScreening')} key={index}>
-                          <div className={cx('time')}>
-                            <div className={cx('time-rate')}>
-                              <span>
-                                <p>
-                                  {formatTime(screening.startTime)}{' '}
-                                  {rooms.find((room) => room.roomId === screening.roomId).roomName}
-                                </p>
-                              </span>
+            <div className={cx('box')}>
+              <div className={cx('image-rateTime')}>
+                <img src={`data:image/png;base64,${film.image}`} />
+              </div>
+              <div className={cx('wrapper-time')}>
+                {film.screenings
+                  .map((screening) => {
+                    const startTime = new Date(screening.startTime);
+                    const formattedStartTime = formatTime(startTime);
+                    return { ...screening, formattedStartTime };
+                  })
+                  .sort((a, b) => {
+                    return new Date(a.startTime) - new Date(b.startTime);
+                  })
+                  .map((screening, index) => {
+                    const startTime = new Date(screening.startTime);
+                    if (startTime.getHours() > 7 || (startTime.getHours() === 9 && startTime.getMinutes() >= 0)) {
+                      if (startTime.getHours() < 23 || (startTime.getHours() === 23 && startTime.getMinutes() <= 59)) {
+                        return (
+                          <div className={cx('timeScreening')} key={index}>
+                            <div className={cx('time')}>
+                              <div className={cx('time-rate')}>
+                                <span>
+                                  <p>
+                                    {formatTime(screening.startTime)}{' '}
+                                    {rooms.find((room) => room.roomId === screening.roomId).roomName}
+                                  </p>
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
+                        );
+                      }
                     }
-                  }
-                  return null;
-                })}
+                    return null;
+                  })}
+              </div>
             </div>
           </div>
         ))}
@@ -264,20 +269,14 @@ function ScreeningRate() {
         </div>
 
         <div>
-          <button onClick={handleCreateScreening}>Tạo Suất chiếu</button>F
+          <button onClick={handleCreateScreening}>Tạo Suất chiếu</button>
         </div>
       </div>
 
       <div className={cx('screeningrate-container')}>
         <div className={cx('wrapper-title')}>
-          <h3>Danh sách lịch chiếu: </h3>
-          {cinema && (
-            
-            <h2>
-              <FontAwesomeIcon icon={faLocationDot} />
-              {cinema.name} - {cinema.location}
-            </h2>
-          )}
+          <h2>Danh sách lịch chiếu: </h2>
+
         </div>
         <div className={cx('dates-container')}>
           {Object.keys(groupedScreenings).map((date, dateIndex) => (
