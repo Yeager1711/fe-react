@@ -28,6 +28,8 @@
                 font-size: 1.4rem;
                 cursor: pointer;
                 position: relative;
+                color: #333;
+                font-weight: 500;
 
                 &:after {
                     content: "";
@@ -42,7 +44,7 @@
 
             .info.active:after,
             .history-ticket.active:after {
-                background-color: #333; 
+                background-color: #333;
             }
         }
 
@@ -80,7 +82,7 @@
                         background: rgba(0, 0, 0, .3);
                         display: flex;
 
-                        .btn-center{
+                        .btn-center {
                             margin: auto;
 
                             label {
@@ -200,7 +202,7 @@
             background: #fff;
             height: 40rem;
             overflow: auto;
-            padding: 2rem 3rem;
+            padding: 2rem;
             border-radius: 1rem;
             margin-top: 3rem;
 
@@ -208,11 +210,44 @@
                 padding: 2rem;
                 width: 100%;
                 height: 100%;
-                display: flex;
+                display: none;
 
                 .null-ticket {
                     margin: auto;
-                    font-size: 1.6rem;
+                    font-size: 2rem;
+                    font-family: cursive;
+                }
+            }
+
+            .box-ticket {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                background: #dbdbdb;
+                padding: 1rem;
+                border-radius: 1rem;
+
+                .image-film {
+                    flex: 1 1 5rem;
+                    max-width: auto;
+
+                    img {
+                    border-radius: .5rem;
+                    width: 100%;
+                    }
+                }
+
+                .info {
+                    flex: 1 1 46rem;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                    gap: 1rem;
+
+                    span {
+                        display: block;
+                        font-size: 1.4rem;
+                        font-weight: 550;
+                    }
                 }
             }
         }

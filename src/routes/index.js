@@ -6,18 +6,22 @@ import Profile from '~/pages/Profile'
 import SetChair from '~/pages/SetChair'
 import CheckTicket from '~/pages/CheckTicket'
 import DetailMovie from '~/pages/DetailMovie'
+import BookingHistory from '~/pages/BookingHistory'
 
 // Admin
 import HomeAdmin from '~/admin/Home'
 import AddFilm from '~/admin/Film/AddFilm'
+import ComboMeal from '~/admin/Film/ComboMeal'
 import AddGenre from '~/admin/Film/Genre'
 import Cenimas from '~/admin/Management/Room'
 import ScreeningRate from '~/admin/Management/ScreeningRate'
+
 
 const publicRoutes = [
     {path: "/", component: Home},
     // {path: "/movieshowing", component: MovieShowing},
     {path: "/my-account/profile/:username", component: Profile},
+    {path: "/my-account/booking/BookingHistory/:userId", component: BookingHistory},
 
     //authen
     {path: "/authen/login", component: Login},
@@ -25,8 +29,6 @@ const publicRoutes = [
 
     //check-ticket
     {path: "/show/check-ticket/:screeningId/:movieId/:roomId", component: CheckTicket},
-
-    // {path: "/setup", component: Setup},
     //setchair
     // { path: '/setchair/:screeningId', component: SetChair },
     { path: '/setchair/show/:screeningId/:movieId/:roomId', component: SetChair },
@@ -45,6 +47,8 @@ const privateRoutes = [
     {path: '/admin/add-genre', component: AddGenre},
     {path: '/admin/manage-cinemas', component: Cenimas},
     {path: '/admin/manage-screeningRate', component: ScreeningRate},
+    {path: "/admin/add-comboMeal", component: ComboMeal},
+
 ]
 
 export { publicRoutes, privateRoutes}

@@ -13,11 +13,12 @@ const cx = classNames.bind(styles);
 
 function Cinemas() {
   const [roomInfo, setRoomInfo] = useState(null);
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/rooms/getRoom');
+        const response = await axios.get(`${apiUrl}/rooms/getRoom`);
         console.log('Response data:', response.data);
 
         setRoomInfo(response.data);
@@ -37,7 +38,7 @@ function Cinemas() {
   // Function to handle room creation
   const createRoom = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/rooms/createroom', { cinemaId: 1, roomNumber: 1 });
+      const response = await axios.post(`${apiUrl}/rooms/createroom`, { cinemaId: 1, roomNumber: 1 });
       console.log('Response data:', response.data);
 
       if (response.data.success) {

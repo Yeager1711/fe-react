@@ -1,0 +1,152 @@
+.booking {
+    background: #333;
+    min-height: 100vh;
+    display: flex;
+
+    .booking-container {
+        margin: auto;
+        margin-top: 8rem;
+        max-width: 90rem;
+        padding: 2rem 3rem;
+        width: 95%;
+
+
+        .title {
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .page-tabs {
+            padding: 2rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: .1rem solid #f59424;
+
+
+            .info,
+            .history-ticket {
+                padding: .3rem 1.5rem;
+                font-size: 1.4rem;
+                color: #fff;
+                cursor: pointer;
+                position: relative;
+
+                &:after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -2.2rem;
+                    width: 100%;
+                    height: 3px;
+                    background-color: transparent;
+                }
+            }
+
+            .info.active:after,
+            .history-ticket.active:after {
+                background-color: #333;
+            }
+        }
+
+        .wrapper-ticketBooking {
+            background: #333;
+            overflow: auto;
+            padding: 0 2rem;
+            border-radius: 1rem;
+            margin-top: 3rem;
+
+            .historyTicket-container {
+                padding: 2rem;
+                width: 100%;
+                height: 100%;
+                display: flex;
+
+                .null-ticket {
+                    margin: auto;
+                    font-size: 2rem;
+                    font-family: cursive;
+                    color: #fff;
+                }
+
+
+            }
+
+            .box-ticket {
+                margin-top: 1.3rem;
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                border: .1rem dashed #f59424;
+                padding: 1rem;
+                border-radius: 1rem;
+                position: relative;
+                overflow: hidden;
+
+                .ticket-icon {
+                    position: absolute;
+                    top: 13px;
+                    right: -86px;
+                    width: 22rem;
+
+                    img {
+                        transform: rotate(-90deg);
+                        width: 100%;
+                    }
+                }
+
+                &:nth-child(1) {
+                    margin-top: 0;
+                }
+
+                .image-film {
+                    flex: 1 1 5rem;
+                    max-width: auto;
+
+                    img {
+                        border-radius: .5rem;
+                        width: 100%;
+                    }
+                }
+
+                .info {
+                    flex: 1 1 46rem;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+                    gap: 1rem;
+
+                    span {
+                        display: flex;
+                        font-size: 1.4rem;
+                        color: #fff;
+                        font-weight: 550;
+                        padding-bottom: .5rem;
+
+                        p {
+                            font-weight: 400;
+                            margin-left: .5rem;
+                            color: #f59424;
+
+                            &:nth-child(6) {
+                                margin: none;
+                            }
+                        }
+
+                        &:nth-child(6) {
+                            display: inline-block;
+                        }
+                    }
+
+                    .time-run {
+                        color: #f59424;
+                        
+                         p{
+                            font-weight: 550;
+                            color: #fff;
+                         }
+                    }
+                }
+            }
+        }
+    }
+}

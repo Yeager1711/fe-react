@@ -21,10 +21,12 @@ function DetailMovie() {
   const { roomId, movieId } = useParams();
   const navigate = useNavigate();
 
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
+
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/film/getfilm/${movieId}`);
+        const response = await fetch(`${apiUrl}/film/getfilm/${movieId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch movie');
         }
@@ -38,33 +40,32 @@ function DetailMovie() {
     if (movieId) {
       fetchMovie();
     }
-  }, [movieId]);
+  }, [movieId, apiUrl]);
 
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/rooms/getRoom/${roomId}`);
+        const response = await fetch(`${apiUrl}/rooms/getRoom/${roomId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch room');
         }
-  
+
         const dataRoom = await response.json();
         setRoom(dataRoom);
       } catch (error) {
         console.error('Error fetching room:', error);
       }
     };
-  
+
     if (roomId) {
       fetchRoom();
     }
   }, [roomId]);
-  
 
   useEffect(() => {
     const fetchScreenings = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/screening/movieScreenings/${movieId}`);
+        const response = await axios.get(`${apiUrl}/screening/movieScreenings/${movieId}`);
         const { screenings, roomId } = response.data;
         setScreenings(screenings);
         setRoom(roomId); // Đặt roomId từ dữ liệu phản hồi API
@@ -96,6 +97,21 @@ function DetailMovie() {
     setSelectedScreenings(screenings.filter((screening) => formatDate(screening.startTime) === date));
   };
 
+  const getTimeInMinutes = (timeString) => {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    return hours * 60 + minutes;
+  };
+
+  // Hàm sắp xếp các suất chiếu theo thời gian từ 9:30 sáng trở đi
+  const sortScreeningsByTime = (screenings) => {
+    return screenings.sort((a, b) => {
+      const timeA = getTimeInMinutes(formatTime(a.startTime));
+      const timeB = getTimeInMinutes(formatTime(b.startTime));
+      return timeA - timeB; // Sắp xếp từ thấp đến cao
+    });
+  };
+
+  // Hàm nhóm các suất chiếu theo ngày và sắp xếp theo thời gian
   const groupScreeningsByDate = (screenings) => {
     const groupedScreenings = {};
     screenings.forEach((screening) => {
@@ -105,6 +121,12 @@ function DetailMovie() {
       }
       groupedScreenings[date].push(screening);
     });
+
+    // Sắp xếp các suất chiếu trong mỗi ngày theo thời gian từ 9:30 sáng trở đi
+    Object.keys(groupedScreenings).forEach((date) => {
+      groupedScreenings[date] = sortScreeningsByTime(groupedScreenings[date]);
+    });
+
     return groupedScreenings;
   };
 
@@ -138,7 +160,7 @@ function DetailMovie() {
 
               {selectedDate && (
                 <div className={cx('showtimes-times')}>
-                  {selectedScreenings.map((screening) => (
+                  {sortScreeningsByTime(selectedScreenings).map((screening) => (
                     <Link
                       to={`/setchair/show/${screening.screeningId}/${movieId}/${screening.roomId}`}
                       key={screening.screeningId}

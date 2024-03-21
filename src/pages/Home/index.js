@@ -12,6 +12,7 @@ import styles from './Home.Module.scss';
 import { useNavigate } from 'react-router-dom'; 
 
 const cx = classNames.bind(styles);
+const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
 
 const Home = () => {
   const [films, setFilms] = useState([]);
@@ -24,7 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch('http://localhost:5000/api/film/getfilm')
+    fetch(`${apiUrl}/film/getfilm`)
       .then((response) => response.json())
       .then((data) => setFilms(data))
       .catch((error) => console.error('Error fetching films:', error));
@@ -130,10 +131,13 @@ const Home = () => {
     return diffDays <= 20;
   };
 
-  const formatDate = (releaseDate) => {
-    const date = new Date(releaseDate);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
+  function formatDate(inputDate) {
+    const date = new Date(inputDate);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
 
   return (
     <div className={cx('home')}>

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 import styles from './Profile.scss';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 import Swal from 'sweetalert2';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,22 +11,28 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function Profile() {
+function Profile({ username }) {
   const [user, setUser] = useState(null);
   const [avatar, setAvatar] = useState(null);
   const [activeTab, setActiveTab] = useState('info');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [temporaryAvatar, setTemporaryAvatar] = useState(null); // State để lưu trữ URL của ảnh tạm thời
+  const [temporaryAvatar, setTemporaryAvatar] = useState(null);
   const fileInputRef = useRef(null);
-  const [fullnameInput, setFullnameInput] = useState('');
+
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
+
+  // check ticket
+  const [bookings, setBookings] = useState([]);
+
+  // --------- API -------------------
   useEffect(() => {
     const token = localStorage.getItem('token');
 
     if (token) {
       axios
-        .get('http://localhost:5000/api/verify/current', {
+        .get(`${apiUrl}/verify/current`, {
           headers: {
             Authorization: token,
           },
@@ -32,7 +40,7 @@ function Profile() {
         .then((response) => {
           setUser(response.data);
           axios
-            .get('http://localhost:5000/api/verify/avatar', {
+            .get(`${apiUrl}/verify/avatar`, {
               headers: {
                 Authorization: token,
               },
@@ -71,7 +79,7 @@ function Profile() {
       const passwordData = { userId: user.userId, newPassword };
 
       axios
-        .post('http://localhost:5000/api/user/repassword', passwordData, {
+        .post(`${apiUrl}/user/repassword`, passwordData, {
           headers: {
             Authorization: token,
           },
@@ -112,21 +120,21 @@ function Profile() {
 
   const handleSaveChanges = () => {
     const token = localStorage.getItem('token');
-    
+
     if (token) {
       const formData = new FormData();
-      const tokenData = JSON.parse(atob(token.split('.')[1])); 
+      const tokenData = JSON.parse(atob(token.split('.')[1]));
       formData.append('userId', tokenData.userId);
-      formData.append('fullname', tokenData.fullname); 
-      if (temporaryAvatar !== null) { 
-        formData.append('avatar', temporaryAvatar); 
+      formData.append('fullname', tokenData.fullname);
+      if (temporaryAvatar !== null) {
+        formData.append('avatar', temporaryAvatar);
       }
-  
+
       axios
-        .post('http://localhost:5000/api/user/updateInfo', formData, {
+        .post('${apiUrl}/user/updateInfo', formData, {
           headers: {
             Authorization: token,
-            'Content-Type': 'multipart/form-data', 
+            'Content-Type': 'multipart/form-data',
           },
         })
         .then((response) => {
@@ -137,10 +145,10 @@ function Profile() {
             showConfirmButton: false,
             timer: 1500,
           });
-          
+
           setUser((prevState) => ({
             ...prevState,
-            avatar: temporaryAvatar, 
+            avatar: temporaryAvatar,
           }));
         })
         .catch((error) => {
@@ -153,7 +161,6 @@ function Profile() {
         });
     }
   };
-  
 
   return (
     <div className={cx('profile')}>
@@ -161,15 +168,12 @@ function Profile() {
         <h3 className={cx('title')}>Tài khoản của tôi</h3>
 
         <div className={cx('page-tabs')}>
-          <span className={cx('info', { active: activeTab === 'info' })} onClick={() => handleTabChange('info')}>
-            Hồ sơ
-          </span>
-          <span
-            className={cx('history-ticket', { active: activeTab === 'ticket' })}
-            onClick={() => handleTabChange('ticket')}
-          >
-            Lịch sử đặt vé
-          </span>
+          <span className={cx('info')}>Hồ sơ</span>
+          {
+            user && (
+              <Link className={cx('history-ticket')} to={`/my-account/booking/BookingHistory/${user.userId}`}>Lịch sử đặt vé</Link>
+            )
+          }
         </div>
 
         {activeTab === 'info' && (
@@ -198,7 +202,7 @@ function Profile() {
                 </div>
                 <div className={cx('box')}>
                   <span>Giới tính</span>
-                  <input placeholder="Nam" defaultValue={user && user.gender} disabled/>
+                  <input placeholder="Nam" defaultValue={user && user.gender} disabled />
                 </div>
                 <div className={cx('box')}>
                   <span>Email</span>
@@ -239,14 +243,6 @@ function Profile() {
               <button type="submit" className={cx('btn-changesRepass')} onClick={handleChangePassword}>
                 Đổi mật khẩu
               </button>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'ticket' && (
-          <div className={cx('wrapper-ticket')}>
-            <div className={cx('historyTicket-container')}>
-              <span className={cx('null-ticket')}>Bạn chưa có lịch sử đặt vé nào !</span>
             </div>
           </div>
         )}

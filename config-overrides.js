@@ -5,4 +5,3 @@ const {
 module.exports = override(
     useBabelRc()
 );
-

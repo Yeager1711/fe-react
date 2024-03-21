@@ -16,10 +16,11 @@ function ScreeningRate() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [isCreating, setIsCreating] = useState(true);
   const [cinema, setCinema] = useState(null);
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
 
   const fetchScreenings = useCallback(async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/screening/allScreenings');
+      const response = await axios.get(`${apiUrl}/screening/allScreenings`);
       setScreenings(response.data.screenings);
     } catch (error) {
       console.error('Error fetching screenings:', error);
@@ -38,7 +39,7 @@ function ScreeningRate() {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const roomResponse = await axios.get('http://localhost:5000/api/rooms/getRoom');
+        const roomResponse = await axios.get(`${apiUrl}/rooms/getRoom`);
         setRooms(roomResponse.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
@@ -56,7 +57,7 @@ function ScreeningRate() {
   useEffect(() => {
     const fetchFilms = async () => {
       try {
-        const filmsResponse = await axios.get('http://localhost:5000/api/film/getfilm');
+        const filmsResponse = await axios.get(`${apiUrl}/film/getfilm`);
         setFilms(filmsResponse.data);
       } catch (error) {
         console.error('Error fetching films:', error);
@@ -74,7 +75,7 @@ function ScreeningRate() {
   const handleCreateScreening = async () => {
     try {
       const cinemaId = '1';
-      const createScreeningResponse = await axios.post('http://localhost:5000/api/screening/createScreening', {
+      const createScreeningResponse = await axios.post(`${apiUrl}/screening/createScreening`, {
         cinemaId,
       });
       console.log('Create Screening Response:', createScreeningResponse.data);
@@ -99,7 +100,7 @@ function ScreeningRate() {
   useEffect(() => {
     const fetchCinema = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/cinema/getCinema/1`);
+        const response = await axios.get(`${apiUrl}/cinema/getCinema/1`);
         setCinema(response.data.cinema);
       } catch (error) {
         console.log('Error fetching cinema:', error);
@@ -160,7 +161,7 @@ function ScreeningRate() {
     const handleUpdateScreening = async () => {
       try {
         const cinemaId = '1';
-        const updateScreeningResponse = await axios.post('http://localhost:5000/api/screening/updateScreening', {
+        const updateScreeningResponse = await axios.post(`${apiUrl}/screening/updateScreening`, {
           cinemaId,
         });
         console.log('Update Screening Response:', updateScreeningResponse.data);

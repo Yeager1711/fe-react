@@ -7,12 +7,19 @@ const cx = classNames.bind(styles);
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [films, setFilms] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/film/getfilm')
+    fetch(`${apiUrl}/film/getfilm`)
       .then((response) => response.json())
       .then((data) => setFilms(data))
       .catch((error) => console.error('Error fetching films:', error));
+    
+    fetch(`${apiUrl}/genre/getgenres`)
+      .then((response) => response.json())
+      .then((data) => setGenres(data.genres))
+      .catch((error) => console.error('Error fetching genres:', error));
   }, []);
 
   // Lọc danh sách phim
@@ -27,6 +34,7 @@ function Home() {
         <div className={cx('button-controllers')}>
           <a href="/admin/add-film">Thêm phim</a>
           <a href="/admin/add-genre">Thêm thể loại phim</a>
+          <a href="/admin/add-comboMeal">Thêm đồ ăn</a>
         </div>
 
         <div className={cx('list-film')}>
@@ -42,9 +50,8 @@ function Home() {
 
           <div className={cx('listContainer-film')}>
             {filteredFilms.map((film, index) => {
-              // Format dữ liệu base64 ở ngoài
-              // const imageSrc = `data:image/png;base64,${film.image}`;
               const imageSrc = `data:image/png;base64,${film.image}`;
+              const genreName = genres.find(genre => genre.genreId === film.genreId)?.name;
               return (
                 <div key={index} className={cx('box')}>
                   <div className={cx('image-film')}>
@@ -53,7 +60,7 @@ function Home() {
                   <div className="content-film">
                     <span className={cx('name-film')}>{film.name}</span>
                     <span className={cx('duration')}>{`Thời gian: ${film.duration}p`}</span>
-                    <span className={cx('genre')}>{`Thể loại phim: ${film.genreId}`}</span>
+                    <span className={cx('genre')}>{`Thể loại phim: ${genreName}`}</span>
                     <span className={cx('releaseDate')}>{`Ngày phát hành: ${film.releaseDate}`}</span>
                   </div>
                 </div>

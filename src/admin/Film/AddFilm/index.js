@@ -9,6 +9,9 @@ import classNames from 'classnames';
 const cx = classNames.bind(styles);
 
 function AddFilm() {
+
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
+
   // State cho dữ liệu phim
   const [filmData, setFilmData] = useState({
     name: '',
@@ -31,7 +34,7 @@ function AddFilm() {
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const responseGenre = await axios.get('http://localhost:5000/api/genre/getgenres');
+        const responseGenre = await axios.get(`${apiUrl}/genre/getgenres`);
         setGenres(responseGenre.data.genres);
         console.log("Genre Data", responseGenre)
       } catch (error) {
@@ -98,10 +101,10 @@ function AddFilm() {
 
       const token = localStorage.getItem('token')
       // Gửi yêu cầu POST đến API
-      const response = await axios.post('http://localhost:5000/api/film/add', formData, {
+      const response = await axios.post(`${apiUrl}/film/add`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`// Gửi token trong header Authorization
+          'Authorization': `Bearer ${token}`
         },
       });
 

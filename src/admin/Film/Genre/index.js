@@ -10,6 +10,7 @@ const cx = classNames.bind(styles);
 
 function AddGenre() {
     const [genreName, setGenreName] = useState('');
+    const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
   
     const handleAddGenre = async () => {
       if (!genreName) {
@@ -34,7 +35,7 @@ function AddGenre() {
       // Nếu người dùng nhấn "OK", thực hiện thêm thể loại
       if (result.isConfirmed) {
         try {
-          const responseGenre = await axios.post('http://localhost:5000/api/genre/addAddgenre', { name: genreName });
+          const responseGenre = await axios.post(`${apiUrl}/genre/addAddgenre`, { name: genreName });
   
           Swal.fire({
             title: 'Thành công',

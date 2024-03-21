@@ -5,6 +5,7 @@
   gap: 2rem;
   min-height: 150vh;
   background: #111;
+  
 
   .setChair-wrapper {
     flex: 1 1 52rem;
@@ -70,6 +71,7 @@
           color: #fff;
           font-size: 1.5rem;
           padding: 1rem 0;
+          margin-bottom: 2rem;
 
           &::before {
             content: "";
@@ -100,6 +102,7 @@
             display: flex;
             gap: 1rem;
             align-items: center;
+            justify-content: space-between;
 
             .column-letter {
               width: 40px;
@@ -119,6 +122,8 @@
               align-items: center;
               position: relative;
 
+              
+              
               &:hover {
                 cursor: pointer;
               }
@@ -129,11 +134,24 @@
                 bottom: 0px;
                 font-size: 1.1rem;
                 color: #149eca;
+
+                &:nth-child(1) {
+                  display: none;
+                }
               }
             }
 
             .active {
               background: #25b392;
+
+              p {
+                color: #fff;
+              }
+            }
+
+            .booked {
+              background-color: red; 
+              color: white; 
 
               p {
                 color: #fff;
