@@ -4,4 +4,4 @@
 - Administrator: can create screenings, create rooms, and manage booked tickets.
 
 ## Home Screen for client
-<img src="./src/gitReadmeImg/home.png" alt="alt text" width="450" height="200">
+<img src="./src/gitReadmeImg/home.png" alt="alt text" width="100%" height="475px">
