@@ -10,9 +10,11 @@ function Login() {
   const [formLogin, setFormLogin] = useState({
     username: '',
     password: '',
-    error: '', // Thêm state error để hiển thị thông báo lỗi dưới các trường nhập liệu
-    showErrorShake: false // Thêm state để xác định liệu có hiển thị hiệu ứng rung rung hay không
+    error: '',
+    showErrorShake: false 
   });
+
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
   
   const history = useNavigate();
 
@@ -30,7 +32,7 @@ function Login() {
         return;
       }
 
-      const responseLogin = await axios.post('http://localhost:5000/api/authen/api/login', {
+      const responseLogin = await axios.post(`${apiUrl}/authen/api/login`, {
         username: username,
         password: password,
       });

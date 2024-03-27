@@ -54,12 +54,15 @@
 
                 .info-container {
                     margin: 2rem 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border: .1rem solid #f5b324;
 
                     .box {
                         display: flex;
                         gap: 2rem;
                         align-items: center;
-                        border: .1rem solid #f5b324;
                         border-radius: .2rem;
                         padding: 1rem 2rem;
 
@@ -67,6 +70,31 @@
                             font-size: 1.8rem;
                             font-weight: 550;
                             text-transform: uppercase;
+                        }
+
+                        .Seat-HoldTime {
+                            display: flex;
+                            align-items: center;
+                            gap: 2rem;
+
+                            #countdown {
+                                display: flex;
+                                font-size: 2rem;
+
+                                p {
+                                    padding: .5rem;
+                                    border-radius: .5rem;
+                                    border: .1rem solid #f5b324;
+
+                                    &:nth-child(1) {
+                                        margin-right: .3rem;
+                                    }
+
+                                    &:nth-child(2) {
+                                        margin-left: .3rem;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -170,6 +198,7 @@
                                 display: flex;
                                 align-items: center;
                                 gap: 1rem;
+
                                 img {
                                     width: 5rem;
                                 }
@@ -223,10 +252,12 @@
 
     .model {
         position: fixed;
-        top: 0; left: 0; right: 0;
+        top: 0;
+        left: 0;
+        right: 0;
         bottom: 0;
-        background: rgba(0,0,0, .6);
-        z-index:  9999;
+        background: rgba(0, 0, 0, .6);
+        z-index: 9999;
         display: none;
 
         .popup {
@@ -370,17 +401,20 @@
                         }
                     }
 
-                    
+
                 }
             }
         }
     }
 }
+
 @keyframes popUps {
     from {
         transform: 0;
         opacity: 0;
-    }to {
+    }
+
+    to {
         opacity: 1;
         transform: 1;
     }

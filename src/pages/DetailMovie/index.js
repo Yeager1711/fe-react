@@ -4,6 +4,7 @@ import styles from './DetailMovie.scss';
 import { useParams, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';
 
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -82,8 +83,8 @@ function DetailMovie() {
 
   const formatTime = (time) => {
     const date = new Date(time);
-    const hours = date.getHours().toString().padStart(2, '0'); // Lấy giờ và padding 0 nếu cần
-    const minutes = date.getMinutes().toString().padStart(2, '0'); // Lấy phút và padding 0 nếu cần
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
   };
 
@@ -93,7 +94,7 @@ function DetailMovie() {
   };
 
   const handleDateClick = (date) => {
-    setSelectedDate(selectedDate === date ? null : date); // Nếu đã chọn thì bỏ chọn, ngược lại chọn ngày mới
+    setSelectedDate(selectedDate === date ? null : date);
     setSelectedScreenings(screenings.filter((screening) => formatDate(screening.startTime) === date));
   };
 
@@ -144,18 +145,21 @@ function DetailMovie() {
             <div className={cx('showtimes-wrapper')}>
               <h3>Chọn suất chiếu</h3>
               <div className={cx('showtimes-container')}>
-                {Object.entries(groupScreeningsByDate(screenings)).map(([date, screeningsByDate]) => (
-                  <div key={date}>
-                    <div
-                      className={cx('showtimes-day', { active: selectedDate === date })}
-                      onClick={() => handleDateClick(date)}
-                    >
-                      <span style={{ background: selectedDate === date ? '#f5b324' : 'inherit' }}>
-                        {formatDate(date)}
-                      </span>
+                {Object.entries(groupScreeningsByDate(screenings))
+                  .sort(([dateA], [dateB]) => new Date(dateA) - new Date(dateB))
+                  .map(([date, screeningsByDate]) => (
+                    <div key={date}>
+                      <div
+                        className={cx('showtimes-day', { active: selectedDate === date })}
+                        onClick={() => handleDateClick(date)}
+                      >
+                        <span style={{ background: selectedDate === date ? '#f5b324' : 'inherit' }}>
+                          Ngày:
+                          {moment(date).format('D/M/YYYY')}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               {selectedDate && (

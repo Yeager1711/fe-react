@@ -185,29 +185,25 @@ function CheckTicket() {
         throw new Error('Người dùng chưa xác thực');
       }
 
-      const seatIds = selectedSeats
-  
+      const seatIds = selectedSeats;
+
       const requestData = {
         userId: user.userId,
         screeningId: screeningId,
-        comboIds: selectedFood.map(food => parseInt(food.comboId)),
+        comboIds: selectedFood.map((food) => parseInt(food.comboId)),
         bookingDate: new Date().toISOString(),
         seatIds: seatIds,
-        totalAmountToPay: totalAmountToPay
+        totalAmountToPay: totalAmountToPay,
       };
-  
+
       // Gửi yêu cầu đặt vé lên server
-      const response = await axios.post(
-        `${apiUrl}/booking/bookingTicket`,
-        requestData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-        }
-      );
-      
+      const response = await axios.post(`${apiUrl}/booking/bookingTicket`, requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       // Kiểm tra kết quả từ yêu cầu đặt vé
       if (response.status === 201) {
         Swal.fire({
@@ -227,9 +223,7 @@ function CheckTicket() {
       });
     }
   };
-  
-  
-  
+
   // ----------------- Fortmat & convert -----------------------
   function decodeBase64Image(base64String) {
     return `data:image/png;base64,${base64String}`;
@@ -245,7 +239,7 @@ function CheckTicket() {
   // ------------------ handle ------------------
   const handleSelectCombo = (comboId) => {
     const existingFoodIndex = selectedFood.findIndex((item) => item.comboId === comboId);
-  
+
     // Nếu combo đã tồn tại, không thêm mới mà chỉ cập nhật số lượng
     if (existingFoodIndex !== -1) {
       const updatedSelectedFood = [...selectedFood];
@@ -259,21 +253,19 @@ function CheckTicket() {
       }
     }
   };
-  
 
   const handleCreateQR = () => {
     const bookingInfo = {
       movieName: movie ? movie.name : '',
       roomName: roomName,
       screeningTime: screening ? formatTime(new Date(screening.startTime)) : '',
-      selectedSeats: selectedSeats, 
+      selectedSeats: selectedSeats,
       totalAmount: totalAmountToPay,
     };
-  
+
     setQrData(bookingInfo);
     setIsModelActive(true);
   };
-  
 
   const formatTime = (date) => {
     const hours = date.getHours();
@@ -282,6 +274,38 @@ function CheckTicket() {
     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
     return `${formattedHours}:${formattedMinutes}`;
   };
+
+  // Seat hold time
+  const countdownElement = document.getElementById('countdown');
+  if (countdownElement) {
+    let currentTime = new Date().getTime();
+
+    // Thời gian kết thúc
+    let endTime = currentTime + 3 * 60 * 1000;
+
+    let x = setInterval(function () {
+      let now = new Date().getTime();
+
+      let distance = endTime - now;
+
+      let minutes = ('0' + Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).slice(-3);
+      let seconds =
+        (Math.floor((distance % (1000 * 60)) / 1000) < 10 ? '0' : '') + Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownElement.innerHTML = `<p>${minutes}</p><p>${seconds}</p>`;
+
+      if (distance < 0) {
+        clearInterval(x);
+        countdownElement.innerHTML = 'Thời gian giữ ghế đã hết !';
+      }
+    }, 1000);
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'F5') {
+      event.preventDefault();
+    }
+  });
 
   return (
     <section className={cx('wrapper-setTicket')}>
@@ -301,6 +325,13 @@ function CheckTicket() {
               <div className={cx('box')}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="71" height="62"></svg>
                 {user && <p className={cx('name-user')}> {user.fullname}</p>}
+              </div>
+
+              <div className={cx('box')}>
+                <div className={cx('Seat-HoldTime')}>
+                  <span>Thời gian giữ ghế: </span>
+                  <div id="countdown"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -351,7 +382,7 @@ function CheckTicket() {
                     ).map(([name, food]) => (
                       <span key={food.comboId} className={cx('food-selected')}>
                         {food.quantity > 1 ? `x${food.quantity} ` : ''}
-                          <img src={decodeBase64Image(food.image)} alt="Image" />
+                        <img src={decodeBase64Image(food.image)} alt="Image" />
                         {name},{' '}
                       </span>
                     ))}
@@ -487,4 +518,3 @@ function CheckTicket() {
 }
 
 export default CheckTicket;
-

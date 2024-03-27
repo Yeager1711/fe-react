@@ -7,6 +7,9 @@ import Swal from 'sweetalert2';
 const cx = classNames.bind(styles);
 
 function Register() {
+
+  const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
+
   const [formData, setFormData] = useState({
     fullname: '',
     phonenumber: '',
@@ -66,7 +69,7 @@ function Register() {
       formDataToSend.append('password', password);
       formDataToSend.append('avatar', avatar);
 
-      const responseRegister = await axios.post('http://localhost:5000/api/authen/api/register', formDataToSend);
+      const responseRegister = await axios.post(`${apiUrl}/authen/api/register`, formDataToSend);
       console.log('Data to send:', formDataToSend);
       Swal.fire({
         icon: 'success',

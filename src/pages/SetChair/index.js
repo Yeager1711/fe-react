@@ -7,6 +7,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import axios from 'axios';
+import moment from 'moment';
+import { data } from 'jquery';
 
 const cx = classNames.bind(styles);
 
@@ -19,14 +21,13 @@ function SetChair() {
   const [movie, setMovie] = useState(null);
   const [screening, setScreening] = useState(null);
   const { movieId, roomId, screeningId } = useParams();
-  const [roomName, setRoomName] = useState('');
-  const [cinema, setCinema] = useState('');
 
   const [roomSeats, setRoomSeats] = useState([]);
-  const [seatStatus, setSeatStatus] = useState({});
+  const [seatStatus, setSeatStatus] = useState([]);
 
   const [user, setUser] = useState('');
   const [bookedSeats, setBookedSeats] = useState([]);
+  const [waitingSeats, setWaitingSeats] = useState([]);
   const [avatar, setAvatar] = useState([]);
 
   const apiUrl = process.env.REACT_APP_LOCAL_API_URL;
@@ -39,11 +40,11 @@ function SetChair() {
   const navigate = useNavigate();
 
   const handleSeatClick = (seatId) => {
-    console.log('Selected seat:', seatId); // Log ra seatId
-    // Kiểm tra xem ghế đã được chọn chưa
+    console.log('Selected seat:', seatId);
+  
     const isSeatSelected = selectedSeats.includes(seatId);
     const isBooked = bookedSeats.includes(seatId);
-
+  
     if (isBooked) {
       Swal.fire({
         icon: 'warning',
@@ -52,8 +53,9 @@ function SetChair() {
       });
       return;
     }
-
-    // Nếu ghế đã được chọn thì loại bỏ khỏi mảng selectedSeats
+  
+  
+  
     if (isSeatSelected) {
       const newSelectedSeats = selectedSeats.filter((selectedSeat) => selectedSeat !== seatId);
       setSelectedSeat(newSelectedSeats);
@@ -62,13 +64,14 @@ function SetChair() {
       const newSelectedSeats = [...selectedSeats, seatId];
       setSelectedSeat(newSelectedSeats);
     }
-
+  
     // Cập nhật trạng thái của ghế
     setSeatStatus((prevStatus) => ({
       ...prevStatus,
       [seatId]: !prevStatus[seatId],
     }));
   };
+  
 
   const handleCreateTicket = () => {
     const newlySelectedSeats = Object.keys(seatStatus).filter((seatId) => seatStatus[seatId]);
@@ -86,17 +89,11 @@ function SetChair() {
           setQuantity(newlySelectedSeats.length);
           setSelectedSeat(newlySelectedSeats);
 
-          // Lưu thông tin phòng vào sessionStorage chỉ với seatId
           const checkoutInfo = {
             selectedSeats: newlySelectedSeats,
             roomId,
           };
           sessionStorage.setItem('checkoutInfo', JSON.stringify(checkoutInfo));
-
-          setTimeout(() => {
-            sessionStorage.removeItem('checkoutInfo');
-            showSessionExpiredAlert();
-          }, 300 * 60 * 1000);
         }
       });
     } else {
@@ -113,8 +110,6 @@ function SetChair() {
     console.log(response.data);
     const checkoutInfo = {
       screening,
-      cinema,
-      roomName,
       selectedSeats,
       date: screening ? new Date(screening.startTime).toLocaleDateString() : null,
       totalPrice: formattedPrice,
@@ -124,8 +119,7 @@ function SetChair() {
     setTimeout(() => {
       sessionStorage.removeItem('checkoutInfo');
       showSessionExpiredAlert();
-      
-    }, 0.2 * 60 * 1000);
+    }, 3 * 60 * 1000);
   };
 
   const showSessionExpiredAlert = () => {
@@ -138,20 +132,18 @@ function SetChair() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.put(`${apiUrl}/booking/clearSeatStatus`, {seatIds: selectedSeats});
-          console.log("Clear Seat Data Selected SeatID", response.data); 
+          const response = await axios.put(`${apiUrl}/booking/clearSeatStatus`, { seatIds: selectedSeats });
+          console.log('Clear Seat Data Selected SeatID', response.data);
         } catch (error) {
           console.error('Error clearing seat status:', error);
         }
-  
+
         sessionStorage.removeItem('checkoutInfo');
-  
+
         window.history.back();
       }
     });
   };
-  
-  
 
   const convertSeatKeyToObject = (seatKey) => {
     const [rowNumber, seatNumber] = seatKey.split('-');
@@ -159,7 +151,7 @@ function SetChair() {
   };
 
   const handleCheckTicket = () => {
-    const selectedSeatsInfo = selectedSeats.map((seatId) => convertSeatKeyToObject(seatId).seatId); // Sửa lại đây để chỉ lấy seatId
+    const selectedSeatsInfo = selectedSeats.map((seatId) => convertSeatKeyToObject(seatId).seatId);
 
     if (selectedSeatsInfo.length === 0) {
       Swal.fire({
@@ -186,20 +178,6 @@ function SetChair() {
     }
   };
 
-  const handleCheckSeats = () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      Swal.fire({
-        title: 'Thông báo !',
-        text: 'Vui lòng đăng nhập tài khoản để thực hiện !',
-        icon: 'warning',
-      });
-      return;
-    }
-  };
-  
-  
-
   useEffect(() => {
     const fetchScreening = async () => {
       try {
@@ -224,78 +202,29 @@ function SetChair() {
     }
   }, [screeningId]);
 
-  useEffect(() => {
-    const fetchMovie = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/film/getfilm/${movieId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch movie');
-        }
-        const data = await response.json();
-        setMovie(data);
-      } catch (error) {
-        console.error('Error fetching movie:', error);
-      }
-    };
-
-    if (movieId) {
-      fetchMovie();
-    }
-
-    const fetchRoom = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/rooms/getRoom/${roomId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch room seats');
-        }
-        const data = await response.json();
-        setRoomSeats(data.seats);
-        setRoomName(data.roomName);
-      } catch (error) {
-        console.error('Error fetching room seats:', error);
-      }
-    };
-
-    if (roomId) {
-      fetchRoom();
-    }
-  }, [movieId, roomId]);
-
   const fetchSeatsForMovie = useCallback(async () => {
     try {
-      const response = await fetch(`${apiUrl}/seats/getSeatRoom/${movieId}`);
+      const response = await fetch(`${apiUrl}/seats/getSeatRoom/${screeningId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch seats for the room');
       }
       const data = await response.json();
       setRoomSeats(data);
+      
+      const waitingSeats = data.filter(seat => seat.seatStatus === "waiting").map(seat => seat.seatId);
+      setWaitingSeats(waitingSeats);
     } catch (error) {
       console.error('Error fetching seats for the room:', error);
     }
   }, [roomId]);
+  
+  
 
   useEffect(() => {
     if (roomId) {
       fetchSeatsForMovie();
     }
   }, [roomId]);
-
-  const fecthCinema = async () => {
-    try {
-      const responseCinema = await fetch(`${apiUrl}/cinema/getCinema`);
-      if (!responseCinema.ok) {
-        throw new Error('Failed to fetch local for the Cinema');
-      }
-      const dataCinema = await responseCinema.json();
-      setCinema(dataCinema.cinema); // Lưu ý: dữ liệu cinema được lấy từ trường cinema của object trả về
-    } catch (error) {
-      console.error('Error fetching cinema:', error);
-    }
-  };
-
-  useEffect(() => {
-    fecthCinema();
-  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -357,7 +286,6 @@ function SetChair() {
     fetchBookings();
   }, [user]);
 
-
   useEffect(() => {
     const fetchBookedSeats = async () => {
       try {
@@ -366,17 +294,15 @@ function SetChair() {
           throw new Error('Failed to fetch booked seats');
         }
         const data = await response.json();
-        console.log("data screening: ", data)
+        console.log('data screening: ', data);
         setBookedSeats(data.bookedSeats);
       } catch (error) {
         console.error('Error fetching booked seats:', error);
       }
     };
-  
+
     fetchBookedSeats();
   }, [screeningId, movieId, roomId]);
-  
-  
 
   const formatTime = (date) => {
     const hours = date.getHours();
@@ -411,53 +337,62 @@ function SetChair() {
     return seatsByRow;
   };
 
-const renderSeats = () => {
-  if (!roomSeats || roomSeats.length === 0) {
-    return <div>Loading...</div>;
-  }
-
-  const seatsByRow = sortSeatsByRow(roomSeats);
-  const renderedSeats = {};
-
-  return Object.keys(seatsByRow).map((rowNumber) => {
-    const rowSeats = seatsByRow[rowNumber];
-    const seatComponents = rowSeats.map((seat) => {
-      if (renderedSeats[seat.seatId]) {
-        return null; 
-      }
-
-      renderedSeats[seat.seatId] = true;
-
-      const rowChar = String.fromCharCode(64 + parseInt(rowNumber)); 
-
-      const isActive = selectedSeats.includes(seat.seatId);
-      const isBooked = bookedSeats.includes(seat.seatId); 
-
+  const renderSeats = () => {
+    if (!roomSeats || roomSeats.length === 0) {
+      return <div>Loading...</div>;
+    }
+  
+    const seatsByRow = sortSeatsByRow(roomSeats);
+    const renderedSeats = {};
+  
+    return Object.keys(seatsByRow).map((rowNumber) => {
+      const rowSeats = seatsByRow[rowNumber];
+      const seatComponents = rowSeats.map((seat) => {
+        if (renderedSeats[seat.seatId]) {
+          return null;
+        }
+  
+        renderedSeats[seat.seatId] = true;
+  
+        const rowChar = String.fromCharCode(64 + parseInt(rowNumber));
+        const isActive = selectedSeats.includes(seat.seatId);
+        const isBooked = bookedSeats.includes(seat.seatId);
+        const isWaiting = seat.status === "waiting"; 
+  
+        return (
+          <div
+            key={seat.seatId}
+            className={cx(
+              'chair',
+              isActive ? 'active' : '',
+              isBooked ? 'booked' : '',
+              isWaiting ? 'waiting' : '' 
+            )}
+            onClick={() => {
+              if (isWaiting) {
+                Swal.fire({
+                  icon: 'warning',
+                  title: 'Ghế đang chờ đặt',
+                  text: 'Vui lòng chọn ghế khác hoặc chờ đợi.',
+                });
+              } else {
+                handleSeatClick(seat.seatId);
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faCouch} />
+            <p>{`${rowChar}-${seat.seatNumber}`}</p>
+          </div>
+        );
+      });
+  
       return (
-        <div
-          key={seat.seatId}
-          className={cx(
-            'chair',
-            isActive ? 'active' : '',
-            isBooked ? 'booked' : '', // Thêm lớp CSS 'booked' nếu ghế đã được đặt từ API
-          )}
-          onClick={() => handleSeatClick(seat.seatId)}
-        >
-          <FontAwesomeIcon icon={faCouch} />
-          <p>{`${rowChar}-${seat.seatNumber}`}</p>
-          {isActive && <FontAwesomeIcon icon={faCheck} className={cx('icon-check')} />}
+        <div className={cx('row')} key={rowNumber}>
+          {seatComponents}
         </div>
       );
     });
-
-    return (
-      <div className={cx('row')} key={rowNumber}>
-        {seatComponents}
-      </div>
-    );
-  });
-};
-
+  };
   
   return (
     <section className={cx('wrapper-setchair')}>
@@ -476,16 +411,21 @@ const renderSeats = () => {
               <div className={cx('cinema-note')}>
                 <p>
                   <FontAwesomeIcon icon={faCouch} />
-                  Ghế chưa đặt <FontAwesomeIcon icon={faCheck} />
+                  Ghế chưa đặt 
                 </p>
                 <p>
                   <FontAwesomeIcon icon={faCouch} />
-                  Ghế đang được chọn <FontAwesomeIcon icon={faTimes} />
+                  Ghế đang chọn
                 </p>
 
                 <p>
                   <FontAwesomeIcon icon={faCouch} />
-                  Ghế đã được đặt <FontAwesomeIcon icon={faTimes} />
+                  Ghế đang được chọn
+                </p>
+
+                <p>
+                  <FontAwesomeIcon icon={faCouch} />
+                  Ghế đã được đặt
                 </p>
               </div>
             </div>
@@ -503,8 +443,8 @@ const renderSeats = () => {
         <section className={cx('showtime-wrapper')}>
           <div className={cx('showtime-container')}>
             <div className={cx('image-film')}>
-              {movie && movie.image ? (
-                <img src={`data:image/jpeg;base64, ${movie.image}`} alt={movie.name} />
+              {screening && screening.movieName ? (
+                <img src={`data:image/jpeg;base64, ${screening.movieImage}`} alt={screening.movieName} />
               ) : (
                 <div className={cx('placeholder-image')}>
                   <span>Image not available</span>
@@ -513,10 +453,10 @@ const renderSeats = () => {
             </div>
 
             <div className={cx('center')}>
-              {movie && movie.name ? (
+              {screening && screening.movieName ? (
                 <>
                   <h3>Tên phim</h3>
-                  <span>{movie.name}</span>
+                  <span>{screening.movieName}</span>
                 </>
               ) : (
                 <div className={cx('placeholder-image')}>
@@ -525,17 +465,17 @@ const renderSeats = () => {
               )}
 
               <div className={cx('showtime')}>
-                {cinema && (
-                  <div className={cx('box')}>
-                    <span>Địa điểm Rạp</span>
-                    <p>{cinema[0].location}</p>
-                  </div>
-                )}
+                {screening && screening.roomName && screening.location && (
+                  <div className={cx('details')}>
+                    <div className={cx('box')}>
+                      <span>Địa điểm:</span>
+                      <p>{screening.location}</p>
+                    </div>
 
-                {roomName && (
-                  <div className={cx('box')}>
-                    <span>Phòng</span>
-                    <p>{roomName}</p>
+                    <div className={cx('box')}>
+                      <span>phòng: </span>
+                      <p>{screening.roomName}</p>
+                    </div>
                   </div>
                 )}
 
@@ -549,7 +489,7 @@ const renderSeats = () => {
                 {screening && (
                   <div className={cx('box')}>
                     <span>Ngày chiếu</span>
-                    <p>{new Date(screening.startTime).toLocaleDateString()}</p>
+                    <p>{moment(screening.startTime).format('D/M/YYYY')}</p>
                   </div>
                 )}
 

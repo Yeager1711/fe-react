@@ -86,15 +86,22 @@
                         object-fit: cover;
                         border-radius: 1rem;
                         box-shadow: 0 .5rem 1rem rgba(255,255,255,.3);
+
+                        &:hover {
+                            margin-bottom: 5rem;
+                            cursor: pointer;
+                        }
                     }
+
+                    
                 }
             }
         }
     }
 
     .film-container {
-        background-color: #f9fbfd;
-        // background: #222;
+        // background-color: #f9fbfd;
+        background: #222;
 
         .button-panigation {
             display: flex;
@@ -112,7 +119,7 @@
                 button {
                     padding: 1rem 5rem;
                     background: #edf2f9;
-                    color: #f69d43;
+                    color: #e27910;
                     font-size: 1.9rem;
                     font-weight: 550;
                     cursor: pointer;

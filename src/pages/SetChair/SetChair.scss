@@ -151,10 +151,17 @@
 
             .booked {
               background-color: red; 
-              color: white; 
 
               p {
                 color: #fff;
+              }
+            }
+
+            .waiting {
+              background-color: #999; 
+
+              p {
+                color: #333;
               }
             }
           }
@@ -168,9 +175,11 @@
             font-size: 1.4rem;
             text-transform: none;
             margin: auto;
+            padding: .5rem;
 
             &:nth-child(1) {
               color: #fff;
+              
             }
 
             &:nth-child(2) {
@@ -178,6 +187,10 @@
             }
 
             &:nth-child(3) {
+              color: #999;
+            }
+
+            &:nth-child(4) {
               color: #b32525;
             }
 
