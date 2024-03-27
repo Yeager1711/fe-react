@@ -5,3 +5,8 @@
 
 ## Home Screen for client
 <img src="./src/gitReadmeImg/home.png" alt="alt text" width="100%" height="475px">
+- This screen client can see out website and pick movie, client can use input to search our movies.
+
+## Show time screen
+<img src="./src/gitReadmeImg/showtimes.png" alt="alt text" width="100%" height="475px">
+- Client chooose datetime of movies, show description about movies
